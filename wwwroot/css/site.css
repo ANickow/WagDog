@@ -71,6 +71,13 @@ button {
     font-size: 50%;
 }
 
+/* Header Styling */
+.header{
+    width: 100%;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+
 /* Modal Styling (for login/registration) */
 .modal {
     display: none; /* Hidden by default */
@@ -97,7 +104,7 @@ button {
 }
 
 .modal-header {
-    padding: 2px 16px;
+    padding: 5px 16px;
     background-color: #659AB2;
     color: white;
 }
@@ -107,7 +114,7 @@ button {
 }
 
 .modal-footer {
-    padding: 2px 16px;
+    padding: 10px 16px;
     background-color: #659AB2;
     color: white;
 }

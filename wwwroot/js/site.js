@@ -1,6 +1,6 @@
 // Write your Javascript code.
 
-// Modal scripting:
+// General Modal scripting:
     // Get the modal
     var modal = document.getElementById('MyModal');
 
