@@ -15,12 +15,42 @@
             <h1>Who's a Good Dog?</h1>
         </div>
         <div class="row">
+            <div class="navigation">
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#news">News</a></li>
+                    <li class="dropdown">
+                        <a href="javascript:void(0)" class="dropbtn">Dropdown</a>
+                        <div class="dropdown-content">
+                        <a href="#">Link 1</a>
+                        <a href="#">Link 2</a>
+                        <a href="#">Link 3</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
             <div class="column one-third-l one-third-m full-width-s">
                 <h1>Default H1 styling </h1>
             </div>
             <div class="column one-third-l one-third-m full-width-s">
                 <h3>Default H3 styling </h3>
-                <button>Default Button</button>
+                <button id="openModal">Default Button (click to open a modal)</button>
+                <div id="MyModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="close">&times;</span>
+                            <h2>Header for the Modal</h2>
+                        </div>
+                        <div class="modal-body">
+                                <p>This is text inside a Modal</p>
+                        </div>
+                        <div class="modal-footer">
+                            <h4>And a Modal Footer</h4>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="column one-third-l one-third-m full-width-s">
                 <p>Default p styling </p>
@@ -44,7 +74,7 @@
         </script>
         
         
-        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="./js/site.js" asp-append-version="true"></script>
 
 </body>
 </html>
