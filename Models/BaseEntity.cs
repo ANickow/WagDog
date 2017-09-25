@@ -1,4 +1,4 @@
-namespace WeddingPlanner.Models
+namespace WagDog.Models
 {
     public abstract class BaseEntity {}
 }
