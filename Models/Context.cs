@@ -12,5 +12,7 @@ namespace WagDog.Models
         public DbSet<Interest> Interests { get; set; }
 
         public DbSet<DogInterest> DogInterests { get; set; }
+
+        public DbSet<Message> Messages { get; set; }
     	}
 }
