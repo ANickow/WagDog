@@ -4,25 +4,24 @@ namespace WagDog.Models
 {
     public class RegisterViewModel : BaseEntity
     {
-        [Required]
-        [MinLength(2)]
         [Display(Name = "Name: ")]
+        [Required(ErrorMessage = "Please tell us your name!")]
         public string Name { get; set; }
 
-        [Required]
-        [EmailAddress]
         [Display(Name = "Email Address: ")]
+        [Required(ErrorMessage = "All dogs must have a valid email address.")]
+        [EmailAddress]
         public string Email { get; set; }
  
-        [Required]
-        [MinLength(8)]
-        [DataType(DataType.Password)]
         [Display(Name = "Password: ")]
+        [DataType(DataType.Password)]
+        [Required(ErrorMessage = "Password must not be blank.")]
+        [MinLength(8, ErrorMessage = "Password must be at least 8 digits long.")]
         public string Password { get; set; }
 
         [Display(Name = "Confirm Password: ")]
         [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "Passwords must match.")]
+        [Compare("Password", ErrorMessage = "Passwords do not match.")]
         public string PassConf { get; set; }
 
     }
