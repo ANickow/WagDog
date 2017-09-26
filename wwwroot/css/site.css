@@ -292,8 +292,53 @@
         margin:auto;
     
     }
+    div.leftPanelProfile{
+        width:225px;
+        display: inline-block;
+        text-align: center;
+    }
+    div.rightPanelProfile{
+        display: inline-block;
+        vertical-align: top;
+        width:55%;
+        padding-left:30px;
+    }
+
+    div.rightPanelProfile li{
+        list-style: none;
+        margin-bottom:5px;
+    }
+    div.rightPanelProfile ul{
+        padding-left:10px;
+    }
+
+
     img.fullProfile{
         height:200px;
+        box-shadow: 2px 2px 6px #888888;
+        border:5px solid white;
+    }
+    ul.icons{
+        margin-top:0px;
+        margin-bottom:5px;
+        padding-left:10px;
+    }
+    li.icons{
+        list-style: none;
+        display: inline-block;
+    }
+    ul img.icon{
+        height:50px;
+        display:inline-block;
+    }
+    img.preview{
+        height:70px;
+        display: inline-block;
+    }
+    table.infoTile{
+        width:80%;
+        margin:auto;
+        margin-top:45px;
     }
 
 
