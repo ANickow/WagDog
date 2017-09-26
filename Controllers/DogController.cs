@@ -17,12 +17,12 @@ namespace WagDog.Controllers
             _context = context;
         }
         // GET: /Home/
-        [HttpGet]
-        [Route("")]
-        public IActionResult Index()
-        {
-            return View();
-        }
+        // [HttpGet]
+        // [Route("")]
+        // public IActionResult Index()
+        // {
+        //     return View();
+        // }
 
         [HttpPost]
         [Route("preregister")]

@@ -3,58 +3,9 @@
         <h1>Wag Dog!</h1>
     </div>
 </div>
-<div id="LoginModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <span id="closeLog" class="close">&times;</span>
-            <h2>You're a Good Dog!</h2>
-        </div>
-        <div class="modal-body">
-                <p>Placeholder for Login Form!</p>
-        </div>
-        <div class="modal-footer">
-            <button id="openReg">New Member Registration?</button>
-        </div>
-    </div>
-</div>
+@Html.Partial("Login")
 
-<div id="RegModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <span id="closeReg" class="close">&times;</span>
-            <h2>Who's a Good Dog?</h2>
-            <div class="navigation" id="profileCats" style="display:none">
-                <ul>
-                    <li><a onclick="openCategory('Body')">Body</a></li>
-                    <li><a onclick="openCategory('OtherAnimals')">Other Animals</a></li>
-                    <li><a onclick="openCategory('Family')">Family</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="modal-body">
-                <div id="UserName" class="category">
-                    <h2>Placeholder for UserName & Password</h2>
-                </div>
-                <div id="Body" class="category" style="display:none">
-                    <h2>Body Type</h2>
-                    <p>Select body type.</p>
-                </div>
-                <div id="OtherAnimals" class="category" style="display:none">
-                    <h2>Co Habitation</h2>
-                    <p>Select other animals.</p> 
-                </div>
-                <div id="Family" class="category" style="display:none">
-                    <h2>Family</h2>
-                    <p>Select Family Members</p>
-                </div>
-        </div>
-        <div class="modal-footer">
-            <button id="startProfile" onclick="logPartOne()">Create a Profile</button>
-            <button id="openLog">Switch to Member Login</button>
-            <button id="submitProfile" onclick="logPartTwo()" disabled style="display:none">Submit Your Profile</button>
-        </div>
-    </div>
-</div>
+@Html.Partial("Registration")
 
 <script>
     //Registration Tab Navigation Bar:
@@ -70,32 +21,20 @@
     function logPartOne(){
         document.getElementById("profileCats").style.display = "block";
         document.getElementById("startProfile").style.display = "none";
-        document.getElementById("openLog").style.display = "none";
-        document.getElementById("submitProfile").style.display = "block";
-        openCategory('Body');
+        <!-- document.getElementById("submitProfile").style.display = "block"; -->
+        openCategory('Age');
     }
 
     $(document).ready(function(){
+        $('form').submit(function(event){
+            event.preventDefault();
+        });
 
         // Log/Reg Modal scripting:
         var loginModal = document.getElementById('LoginModal');
         var registrationModal = document.getElementById('RegModal');
-
-        var logBtn = document.getElementById("openLog");
-        var regBtn = document.getElementById("openReg");
-
         var closeLog = document.getElementById("closeLog");
         var closeReg = document.getElementById("closeReg");
-
-        logBtn.onclick = function(){
-            registrationModal.style.display = "none";
-            loginModal.style.display = "block";
-        }
-
-        regBtn.onclick = function(){
-            registrationModal.style.display = "block";
-            loginModal.style.display = "none";
-        }
 
         closeLog.onclick = function(){
             registrationModal.style.display = "block";
@@ -109,6 +48,14 @@
 
         registrationModal.style.display = "block";
 
+        var AgeSlider = document.getElementById("AgeSlider");
+        var AgeValue = document.getElementById("AgeValue");
+        AgeValue.innerHTML = AgeSlider.value; // Display the default slider value
+
+        // Update the current slider value (each time you drag the slider handle)
+        AgeSlider.oninput = function() {
+            AgeValue.innerHTML = this.value;
+        }
     });
     
 </script>

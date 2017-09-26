@@ -1,0 +1,194 @@
+@model WagDog.Models.RegisterViewModel
+
+<div id="RegModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span id="closeReg" class="close">Login?</span>
+            <h2>Who's a Good Dog?</h2>
+            <div class="navigation" id="profileCats" style="display:none">
+                <ul>
+                    <li><a onclick="openCategory('Age')"><i class="material-icons">&#xE422;</i></a></li>
+                    <li><a onclick="openCategory('Body')"><i class="material-icons">&#xEB43;</i></a></li>
+                    <li><a onclick="openCategory('OtherAnimals')"><i class="material-icons">&#xE88A;</i></a></li>
+                    <li><a onclick="openCategory('Family')"><i class="material-icons">&#xE7FB;</i></a></li>
+                    <li><a onclick="openCategory('Education')"><i class="material-icons">&#xE80C;</i></a></li>
+                    <li><a onclick="openCategory('Barking')"><i class="material-icons">&#xE050;</i></a></li>
+                    <li><a onclick="openCategory('Accidents')"><i class="material-icons">&#xE000;</i></a></li>
+                    <li><a onclick="openCategory('Breed')"><i class="material-icons">&#xE91D;</i></a></li>
+                    <li><a onclick="openCategory('Interests')"><i class="material-icons">&#xE24E;</i></a></li>
+                    <li><a onclick="openCategory('Description')"><i class="material-icons">&#xE254;</i></a></li>
+                    <li><a onclick="openCategory('Photo')"><i class="material-icons">&#xE8FC;</i></a></li>
+                    <li><a onclick="openCategory('Preferences')"><i class="material-icons">&#xE87D;</i></a></li>
+                </ul>
+            </div>
+        </div>
+        <form asp-controller="Dog" asp-action="" method="post">
+        <div class="modal-body">
+            <br/>
+                <div id="UserName" class="category">
+                    <div class="flex-space-around">
+                        <div>
+                            <label class="logreg-label" asp-for="Name"></label>
+                            <input class="logreg-input" asp-for="Name">
+                            <br/>
+                            <label class="logreg-label" asp-for="Email"></label>
+                            <input class="logreg-input" asp-for="Email">
+                        </div>
+                        <div>
+                            <label class="logreg-label" asp-for="Password"></label>
+                            <input class="logreg-input" asp-for="Password">
+                            <br/>
+                            <label class="logreg-label" asp-for="PassConf"></label>
+                            <input class="logreg-input" asp-for="PassConf">
+                        </div>
+                    </div>
+                </div>
+                <div id="Age" class="category" style="display:none">
+                    <h2>Age</h2>
+                    <label asp-for="Age">Age: <span id="AgeValue"></span></label>
+                    <div id="slidecontainer">
+                        <input type="range" min="0" max="21" value="5" class="slider" id="AgeSlider" name="Age">
+                    </div>
+                    <br>
+                    <a class="modal-footer-link" onclick="openCategory('Body')">Next (Body Type)</a>
+                </div>  
+                <div id="Body" class="category" style="display:none">
+                    <h2> Body Type</h2>
+                    <div class="flex-space-around">
+                        <div><input type="radio" name="BodyType" value="Toy"><p>Toy</p></div>
+                        <div><input type="radio" name="BodyType" value="Small"><p>Small</p></div>
+                        <div><input type="radio" name="BodyType" value="Medium"><p>Medium</p></div>
+                        <div><input type="radio" name="BodyType" value="Husky"><p>Husky</p></div>
+                    </div>
+                    <br>
+                    <a class="modal-footer-link" onclick="openCategory('OtherAnimals')">Next (CoHabitation Status)</a>
+                </div>    
+                <div id="OtherAnimals" class="category" style="display:none">
+                    <h2>Co Habitation Status</h2>
+                    <p>Select any animals you currently live with:</p>
+                    <div class="flex-space-around">
+                        <div><input type="checkbox" name="Animals" value="Dog"><p>Dog(s)</p></div>
+                        <div><input type="checkbox" name="Animals" value="Cat"><p>Cat(s)</p></div>
+                        <div><input type="checkbox" name="Animals" value="Bird"><p>Bird(s)</p></div>
+                        <div><input type="checkbox" name="Animals" value="Reptile"><p>Reptile(s)</p></div>
+                    </div>
+                    <br>
+                    <div class="flex-space-around">
+                        <div><input type="checkbox" name="Animals" value="Fish"><p>Fish(s)</p></div>
+                        <div><input type="checkbox" name="Animals" value="Rodent"><p>Rodent(s)</p></div>
+                        <div><input type="checkbox" name="Animals" value="Other"><p>Other</p></div>
+                    </div>
+                    <br>
+                    <a class="modal-footer-link" onclick="openCategory('Family')">Next (Human Family)</a>
+                </div>
+                <div id="Family" class="category" style="display:none">
+                    <h2>Family</h2>
+                    <p>Select the member of your human family</p>
+                    <div class="flex-space-around">
+                        <div><input type="checkbox" name="Humans" value="Mom<"><p>Mom(s)</p></div>
+                        <div><input type="checkbox" name="Humans" value="Dad<"><p>Dad(s)</p></div>
+                    </div>
+                    <br>
+                    <div class="flex-space-around">
+                        <div><input type="checkbox" name="Humans" value="Sisters"><p>Sister(s)</p></div>
+                        <div><input type="checkbox" name="Humans" value="Brothers"><p>Brother(s)</p></div>
+                        <div><input type="checkbox" name="Humans" value="Other"><p>Other</p></div>
+                    </div>
+                    <br>
+                    <a class="modal-footer-link" onclick="openCategory('Education')">Next (Education)</a>
+                </div>
+                <div id="Education" class="category" style="display:none">
+                    <h2>Education</h2>
+                    <p>Select your highest level of education or training</p>
+                    <div class="flex-space-around">
+                        <div><input type="radio" name="HighestEducation" value="None"><p>None</p></div>
+                        <div><input type="radio" name="HighestEducation" value="Student"><p>Student</p></div>
+                        <div><input type="radio" name="HighestEducation" value="Obedience"><p>Obedience School</p></div>
+                        <div><input type="radio" name="HighestEducation" value="Advanced"><p>Advanced Training/Special Skills</p></div>
+                    </div>
+                    <br>
+                    <a class="modal-footer-link" onclick="openCategory('Barking')">Next (Barking)</a>
+                </div>
+                <div id="Barking" class="category" style="display:none">
+                    <h2>Barking</h2>
+                    <p>Select your barking frequency</p>
+                    <div class="flex-space-around">
+                        <div><input type="radio" name="Barking" value="Never"><p>Never</p></div>
+                        <div><input type="radio" name="Barking" value="Occasionally"><p>Yes-Occasionally</p></div>
+                        <div><input type="radio" name="Barking" value="Daily"><p>Yes-Daily</p></div>
+                        <div><input type="radio" name="Barking" value="Quitting"><p>Yes-Trying to Quit</p></div>
+                    </div>
+                    <br>
+                    <a class="modal-footer-link" onclick="openCategory('Accidents')">Next (Accidents)</a>
+                </div>
+                <div id="Accidents" class="category" style="display:none">
+                    <h2>Accidents</h2>
+                    <p>Select Accident Frequency</p>
+                    <div class="flex-space-around">
+                        <div><input type="radio" name="Accidents" value="Never"><p>Never</p></div>
+                        <div><input type="radio" name="Accidents" value="Rarely"><p>Rarely</p></div>
+                        <div><input type="radio" name="Accidents" value="Sick"><p>When Ill</p></div>
+                        <div><input type="radio" name="Accidents" value="Frequently"><p>Frequently</p></div>
+                    </div>
+                    <br>
+                    <a class="modal-footer-link" onclick="openCategory('Breed')">Next (Breed)</a>
+                </div>
+                <div id="Breed" class="category" style="display:none">
+                    <h2>Breed</h2>
+                    <select name="Breed">
+                        <option value="Beagle">Beagle</option>
+                        <option value="Boxer">Boxer</option>
+                        <option value="Bulldog">Bulldog</option>
+                        <option value="CockerSpaniel">Cocker Spaniel</option>
+                        <option value="GermanShepherd">German Shepherd</option>
+                        <option value="GoldenRetriever">Golden Retriever</option>
+                        <option value="Labrador">Labrador</option>
+                        <option value="Poodle">Poodle</option>
+                        <option value="Rottweiler">Rottweiler</option>
+                        <option value="Yorkie">Yorkie</option>
+                        <option value="Mixed Breed">Mixed Breed</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <br>
+                    <a class="modal-footer-link" onclick="openCategory('Interests')">Next (Interests)</a>
+                </div>
+                <div id="Interests" class="category" style="display:none">
+                    <h2>Interests</h2>
+                    <p>Select At Least 3</p>
+                    <div class="flex-space-around">
+                        <div><input type="checkbox" name="Interests" value="Chasing"><p>Chasing Small Animals</p></div>
+                        <div><input type="checkbox" name="Interests" value="Frisbee"><p>Frisbee</p></div>
+                        <div><input type="checkbox" name="Interests" value="Treats"><p>Treats</p></div>
+                        <div><input type="checkbox" name="Interests" value="TugOWar"><p>Tug O' War</p></div>
+                    </div>
+                    <br>
+                    <div class="flex-space-around">
+                        <div><input type="checkbox" name="Interests" value="Digging"><p>Digging</p></div>
+                        <div><input type="checkbox" name="Interests" value="Chewing"><p>Chewing</p></div>
+                        <div><input type="checkbox" name="Interests" value="CelebrityDogs"><p>Celebrity Dogs</p></div>
+                        <div><input type="checkbox" name="Interests" value="Sniffing"><p>Sniffing</p></div>
+                    </div>
+                    <br>
+                    <a class="modal-footer-link" onclick="openCategory('Description')">Next (Describe yourself)</a>
+                </div>
+                <div id="Description" class="category" style="display:none">
+                    <h2>Description</h2>
+                    <textarea rows="4" cols="100" placeholder="What should other dogs know about you?"></textarea>
+                    <br>
+                    <a class="modal-footer-link" onclick="openCategory('Photo')">Next (Photo)</a>
+                </div>
+                <div id="Photo" class="category" style="display:none">
+                    <h2>Photo</h2>
+                    <p>Select Photo for Upload</p>
+                </div>
+                <div id="Preferences" class="category" style="display:none">
+                    <h2>Preferences</h2>
+                    <p>Select Category</p>
+                </div>
+            <br/>
+            <button id="startProfile" onclick="logPartOne()">Register & Create a Profile</button>
+            <button id="submitProfile" onclick="logPartTwo()" disabled style="display:none">Submit Your Profile</button>
+        </div>
+        </form>
+    </div>
+</div>

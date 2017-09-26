@@ -46,12 +46,65 @@ button {
     border-radius: 10px;
     color: #B26F3A;
     padding: 10px 25px;
+    margin: 5px auto;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
     box-shadow: 2px 2px 5px #659AB2;
 }
+
+label, input{
+    display: block; 
+}
+
+label {
+    padding: 4px 0 0;
+    float: left;
+    width: 150px;
+}
+
+input {
+    float: left;
+    width: 200px;
+    border-radius: 5px;
+    background-color: #FFBB73;
+    margin: 5px auto;
+    text-align: left;
+}
+
+
+/* Special styling classes */
+.modal-footer-link{
+    size: 0.25rem;
+    position: relative;
+    bottom: -20px;
+}
+
+.flex-space-around{
+    display: flex;
+    justify-content: space-around;
+}
+
+.logreg-label, .logreg-input{
+    display: block; 
+}
+
+.logreg-label {
+    padding: 4px 0 0;
+    float: left;
+    width: 150px;
+}
+
+.logreg-input {
+    float: left;
+    width: 200px;
+    border-radius: 5px;
+    background-color: #FFBB73;
+    margin: 5px auto;
+    text-align: left;
+}
+
 
 /* Logo Styling - For logo small use BOTH classes */
 .Logo > * {
@@ -111,6 +164,7 @@ button {
 
 .modal-body {
     padding: 2px 16px;
+    background-color: #fefefe;
 }
 
 .modal-footer {
@@ -122,7 +176,7 @@ button {
 .close {
     color: white;
     float: right;
-    font-size: 28px;
+    font-size: 1rem;
     font-weight: bold;
 }
 
@@ -185,6 +239,45 @@ li.dropdown {
     display: block;
 }
 
+/* Range Slider Styling */
+#slidecontainer {
+    width: 100%; /* Width of the outside container */
+}
+
+.slider {
+    -webkit-appearance: none;  /* Override default CSS styles */
+    appearance: none;
+    width: 100%; /* Full-width */
+    height: 15px; /* Specified height */
+    border-radius: 5px;
+    background: #d3d3d3; /* Grey background */
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+}
+
+.slider:hover {
+    opacity: 1; /* Fully shown on mouse-over */
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    border-radius: 50%;
+    background: #3EC3FF; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+}
+
+.slider::-moz-range-thumb {
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    border-radius: 50%;
+    background: #3EC3FF; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+}
 
 /* Grid Styling Rules */
 

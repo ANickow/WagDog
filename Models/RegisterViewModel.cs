@@ -30,7 +30,7 @@ namespace WagDog.Models
         public string Breed { get; set; }
 
         [Display(Name = "Age")]
-        [Range(1,21)]
+        [Range(0,21)]
         public int Age { get; set; }
 
         [Display(Name = "Body Type")]
