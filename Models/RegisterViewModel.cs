@@ -25,25 +25,6 @@ namespace WagDog.Models
         [Compare("Password", ErrorMessage = "Passwords must match.")]
         public string PassConf { get; set; }
 
-        [Display(Name = "Breed")]
-        public string Breed { get; set; }
-
-        [Display(Name = "Age")]
-        public int Age { get; set; }
-
-        [Display(Name = "Body Type")]
-        public string BodyType { get; set; }
-
-        [Display(Name = "Highest Education")]
-        public string HighestEducation { get; set; }
-
-        [Display(Name = "Barking" )]
-        public string Barking { get; set; }
-
-        [Display(Name = "Accidents")]
-        public string Accidents { get; set; }
-
-
     }
 
 }

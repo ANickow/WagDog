@@ -92,12 +92,6 @@ namespace WagDog.Controllers
                     Name = RegAuth.Name,
                     Email = RegAuth.Email,
                     Password = RegAuth.Password,
-                    Breed = RegAuth.Breed,
-                    Age = RegAuth.Age,
-                    BodyType = RegAuth.BodyType,
-                    HighestEducation = RegAuth.HighestEducation,
-                    Barking = RegAuth.Barking,
-                    Accidents = RegAuth.Accidents,
                     created_at = DateTime.Now,
                     updated_at = DateTime.Now
 
