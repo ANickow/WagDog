@@ -1,6 +1,5 @@
 @using WagDog.Models
 
-
 <div class="header">
     <div class="Logo">
         <h1>Wag Dog!</h1>
@@ -22,7 +21,6 @@
     }
 
     function regPartOne(){
-        console.log("HERE");
         var registerDog = {
             Name : $("#registerName").val(),
             Email : $("#registerEmail").val(),
@@ -30,7 +28,6 @@
             PassConf : $("#registerPassConf").val()
         }
         $.post("PreRegister", registerDog, function(response){
-            console.log(response);
             if(response["errors"] == "True"){
                 document.getElementById("NameErrors").innerHTML = response["Name"];
                 document.getElementById("EmailErrors").innerHTML = response["Email"];
@@ -43,16 +40,38 @@
                 openCategory('Age');
             }
         });
-        
+    }
+
+
+    function login(){
+        var loginDog = {
+            Email : $("#loginEmail").val(),
+            Password : $("#loginPassword").val(),
+        }
+        $.post("ProcessLogin", loginDog, function(response){
+            console.log(response);
+            if(response["errors"] == "True"){
+                document.getElementById("LEmailErrors").innerHTML = response["Email"];
+                document.getElementById("LPasswordErrors").innerHTML = response["Password"];
+            } else {
+                window.location.replace("Dashboard")
+            }
+        });
     }
 
     $(document).ready(function(){
 
+        $('form').submit(function(event){
+            event.preventDefault();
+        });
+       
         // Log/Reg Modal scripting:
         var loginModal = document.getElementById('LoginModal');
         var registrationModal = document.getElementById('RegModal');
         var closeLog = document.getElementById("closeLog");
         var closeReg = document.getElementById("closeReg");
+
+        registrationModal.style.display = "block";
 
         closeLog.onclick = function(){
             registrationModal.style.display = "block";
@@ -63,8 +82,6 @@
             registrationModal.style.display = "none";
             loginModal.style.display = "block";
         }
-
-        registrationModal.style.display = "block";
 
         var AgeSlider = document.getElementById("AgeSlider");
         var AgeValue = document.getElementById("AgeValue");

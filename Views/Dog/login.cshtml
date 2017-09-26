@@ -10,13 +10,13 @@
             <br/>
                 <form asp-controller="Dog" asp-action="ProcessLogin" method="post">
                     <div class="flex-space-around">
-                         <label class="logreg-label" asp-for="Email"></label>
-                        <input class="logreg-input" asp-for="Email">
-                        <label class="logreg-label" asp-for="Password"></label>
-                        <input class="logreg-input" asp-for="Password">  
+                         <label class="logreg-label" asp-for="Email">Email: <span class='error' id="LEmailErrors"></span></label>
+                        <input class="logreg-input" asp-for="Email" id="loginEmail">
+                        <label class="logreg-label" asp-for="Password">Password: <span class='error' id="LPasswordErrors"></span></label>
+                        <input class="logreg-input" asp-for="Password" id="loginPassword">  
                     </div>   
             <br/>     
-            <button type="submit">Login</button> 
+            <button type="submit" onclick="login()">Login</button> 
             </form>
         </div>
     </div>
