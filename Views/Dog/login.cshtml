@@ -1,14 +1,12 @@
-@{
-    ViewData["Title"] = "Wag Dog";
-}
-<div class="Logo">
-    <h1>WagDog</h1>
-</div>
-
-
-@using WagDog
-@model WagDog.Models.RegisterViewModel
+@using BankAccts
+@model BankAccts.Models.RegisterViewModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+<div class="jumbotron">
+    <a href="/login"><button class="button" style="float: right">login</button></a>
+    <h1>REGISTER</h1>
+</div>
 
 <Form asp-controller="Dog" asp-action="PreRegister" method="post">
     
@@ -28,6 +26,6 @@
     <label asp-for="PassConf"></label>
     <input asp-for="PassConf">
 
-    <input type="submit" value="PRE REGISTER">
+    <input type="submit" class="button" value="Register">
 
 </Form>

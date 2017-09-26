@@ -7,7 +7,6 @@ namespace WagDog.Models
         [Required]
         [MinLength(2)]
         [Display(Name = "Name: ")]
-        [RegularExpression(@"^[a-zA-Z]+$")]
         public string Name { get; set; }
 
         [Required]
@@ -30,7 +29,6 @@ namespace WagDog.Models
         public string Breed { get; set; }
 
         [Display(Name = "Age")]
-        [Range(1,21)]
         public int Age { get; set; }
 
         [Display(Name = "Body Type")]
