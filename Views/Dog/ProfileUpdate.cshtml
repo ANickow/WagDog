@@ -1,4 +1,6 @@
-@model WagDog.Models.RegisterViewModel
+@model WagDog.Models.Dog
+@using WagDog.Models
+
 
 <div id="RegModal" class="modal">
     <div class="modal-content">
@@ -22,30 +24,15 @@
                 </ul>
             </div>
         </div>
-        <form asp-controller="Dog" asp-action="" method="post">
+        
         <div class="modal-body">
             <br/>
-                <div id="UserName" class="category">
-                    <div class="flex-space-around">
-                        <div>
-                            <label class="logreg-label" asp-for="Name"></label>
-                            <input class="logreg-input" asp-for="Name">
-                            <br/>
-                            <label class="logreg-label" asp-for="Email"></label>
-                            <input class="logreg-input" asp-for="Email">
-                        </div>
-                        <div>
-                            <label class="logreg-label" asp-for="Password"></label>
-                            <input class="logreg-input" asp-for="Password">
-                            <br/>
-                            <label class="logreg-label" asp-for="PassConf"></label>
-                            <input class="logreg-input" asp-for="PassConf">
-                        </div>
-                    </div>
-                </div>
+                @if(@Model.Email == null){
+                    @Html.Partial("PreRegister", (RegisterViewModel)@ViewBag.RegisterDog)
+                }
                 <div id="Age" class="category" style="display:none">
                     <h2>Age</h2>
-                    <label asp-for="Age">Age: <span id="AgeValue"></span></label>
+                    <label for="Age">Age: <span id="AgeValue"></span></label>
                     <div id="slidecontainer">
                         <input type="range" min="0" max="21" value="5" class="slider" id="AgeSlider" name="Age">
                     </div>
@@ -186,9 +173,7 @@
                     <p>Select Category</p>
                 </div>
             <br/>
-            <button id="startProfile" onclick="logPartOne()">Register & Create a Profile</button>
-            <button id="submitProfile" onclick="logPartTwo()" disabled style="display:none">Submit Your Profile</button>
+            <button id="submitProfile" onclick="regPartTwo()" disabled style="display:none">Submit Your Profile</button>
         </div>
-        </form>
     </div>
 </div>

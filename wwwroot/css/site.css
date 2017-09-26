@@ -105,6 +105,10 @@ input {
     text-align: left;
 }
 
+.error{
+    font-size: smaller;
+    color: #B26F3A;
+}
 
 /* Logo Styling - For logo small use BOTH classes */
 .Logo > * {

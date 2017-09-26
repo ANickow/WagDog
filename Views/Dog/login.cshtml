@@ -1,31 +1,23 @@
-@using BankAccts
-@model BankAccts.Models.RegisterViewModel
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model WagDog.Models.LoginViewModel
 
-
-<div class="jumbotron">
-    <a href="/login"><button class="button" style="float: right">login</button></a>
-    <h1>REGISTER</h1>
+<div id="LoginModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span id="closeLog" class="close">New Member?</span>
+            <h2>You're a Good Dog!</h2>
+        </div>
+        <div class="modal-body">
+            <br/>
+                <form asp-controller="Dog" asp-action="ProcessLogin" method="post">
+                    <div class="flex-space-around">
+                         <label class="logreg-label" asp-for="Email"></label>
+                        <input class="logreg-input" asp-for="Email">
+                        <label class="logreg-label" asp-for="Password"></label>
+                        <input class="logreg-input" asp-for="Password">  
+                    </div>   
+            <br/>     
+            <button type="submit">Login</button> 
+            </form>
+        </div>
+    </div>
 </div>
-
-<Form asp-controller="Dog" asp-action="PreRegister" method="post">
-    
-    <span asp-validation-for="Name"></span><br>
-    <label asp-for="Name"></label>
-    <input asp-for="Name" autofocus>
-
-    <span asp-validation-for="Email"></span><br>
-    <label asp-for="Email"></label>
-    <input asp-for="Email">
-
-    <span asp-validation-for="Password"></span><br>
-    <label asp-for="Password"></label>
-    <input asp-for="Password">
-
-    <span asp-validation-for="PassConf"></span><br>
-    <label asp-for="PassConf"></label>
-    <input asp-for="PassConf">
-
-    <input type="submit" class="button" value="Register">
-
-</Form>

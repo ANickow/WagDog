@@ -1,33 +1,79 @@
-@{
-    ViewData["Title"] = "Wag Dog";
-}
-<div class="Logo">
-    <h1>WagDog</h1>
+@using WagDog.Models
+
+
+<div class="header">
+    <div class="Logo">
+        <h1>Wag Dog!</h1>
+    </div>
 </div>
+@Html.Partial("Login", (LoginViewModel)@ViewBag.LoginDog)
 
+@Html.Partial("ProfileUpdate", (Dog)@ViewBag.ProfileDog)
 
-@using WagDog
-@model WagDog.Models.RegisterViewModel
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<script>
+    //Registration Tab Navigation Bar:
+    function openCategory(categoryName) {
+        var i;
+        var x = document.getElementsByClassName("category");
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none"; 
+        }
+        document.getElementById(categoryName).style.display = "block"; 
+    }
 
-<Form asp-controller="Dog" asp-action="PreRegister" method="post">
+    function regPartOne(){
+        console.log("HERE");
+        var registerDog = {
+            Name : $("#registerName").val(),
+            Email : $("#registerEmail").val(),
+            Password : $("#registerPassword").val(),
+            PassConf : $("#registerPassConf").val()
+        }
+        $.post("PreRegister", registerDog, function(response){
+            console.log(response);
+            if(response["errors"] == "True"){
+                document.getElementById("NameErrors").innerHTML = response["Name"];
+                document.getElementById("EmailErrors").innerHTML = response["Email"];
+                document.getElementById("PasswordErrors").innerHTML = response["Password"];
+                document.getElementById("PassConfErrors").innerHTML = response["PassConf"];
+            } else {
+                document.getElementById("profileCats").style.display = "block";
+                document.getElementById("startProfile").style.display = "none";
+                document.getElementById("submitProfile").style.display = "block";
+                openCategory('Age');
+            }
+        });
+        
+    }
+
+    $(document).ready(function(){
+
+        // Log/Reg Modal scripting:
+        var loginModal = document.getElementById('LoginModal');
+        var registrationModal = document.getElementById('RegModal');
+        var closeLog = document.getElementById("closeLog");
+        var closeReg = document.getElementById("closeReg");
+
+        closeLog.onclick = function(){
+            registrationModal.style.display = "block";
+            loginModal.style.display = "none";
+        }
+
+        closeReg.onclick = function(){
+            registrationModal.style.display = "none";
+            loginModal.style.display = "block";
+        }
+
+        registrationModal.style.display = "block";
+
+        var AgeSlider = document.getElementById("AgeSlider");
+        var AgeValue = document.getElementById("AgeValue");
+        AgeValue.innerHTML = AgeSlider.value; // Display the default slider value
+
+        // Update the current slider value (each time you drag the slider handle)
+        AgeSlider.oninput = function() {
+            AgeValue.innerHTML = this.value;
+        }
+    });
     
-    <span asp-validation-for="Name"></span><br>
-    <label asp-for="Name"></label>
-    <input asp-for="Name" autofocus>
-
-    <span asp-validation-for="Email"></span><br>
-    <label asp-for="Email"></label>
-    <input asp-for="Email">
-
-    <span asp-validation-for="Password"></span><br>
-    <label asp-for="Password"></label>
-    <input asp-for="Password">
-
-    <span asp-validation-for="PassConf"></span><br>
-    <label asp-for="PassConf"></label>
-    <input asp-for="PassConf">
-
-    <input type="submit" value="PRE REGISTER">
-
-</Form>
+</script>
