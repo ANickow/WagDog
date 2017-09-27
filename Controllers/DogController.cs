@@ -122,27 +122,50 @@ namespace WagDog.Controllers
 
         [HttpPost]
         [Route("ProcessLogin")]
-        public IActionResult ProcessLogin(LoginViewModel LoginAuth)
+        public JsonResult ProcessLogin(LoginViewModel LoginAuth)
         {
+            Dictionary<string, string> response = new Dictionary<string, string>();
+            response.Add("errors", "True");
+            response.Add("Email", "");
+            response.Add("Password", "");
             if (ModelState.IsValid)
             {
                 Dog CurrentDog = _context.Dogs.SingleOrDefault(dog => dog.Email == LoginAuth.Email);
-                if(CurrentDog != null)
+                if(CurrentDog != null && LoginAuth.Password != null)
                 {
-                    HttpContext.Session.SetInt32("CurrentDog", (int)CurrentDog.DogId);
-                    return Redirect("LANDING_PAGE");
+                    var Hasher = new PasswordHasher<Dog>();
+                    if(0 != Hasher.VerifyHashedPassword(CurrentDog, CurrentDog.Password, LoginAuth.Password)){
+                        HttpContext.Session.SetInt32("CurrentDog", (int)CurrentDog.DogId);
+                        response["errors"] = "False";
+                    } else {
+                        response["Password"] = "Incorrect Password";
+                    }
                 }
                 else 
                 {
-                    ModelState.AddModelError("Email", "Does not match our records");
-                    return View("login", LoginAuth);
+                    response["Email"] = "Does not match our records";
                 }
             }
             else
             {
-                return View ("login", LoginAuth);
-            }
+                foreach (string key in ViewData.ModelState.Keys){
+                    try {
+                        string error = ViewData.ModelState.Keys.Where(k => k == key).Select(k => ModelState[k].Errors[0].ErrorMessage).First();
+                        response[key] = error;
+                    } catch {
+                        continue;
+                    }
+                }
+            } 
+            return Json(response);
         }
+
+        [HttpGet]
+        [Route("Dashboard")]
+        public IActionResult Dashboard(){
+            return View("LANDING_PAGE");
+        }
+
 // MESSAGES ROUTE**********************************************************************
         [HttpPost]
         [Route("PostMessage")]
