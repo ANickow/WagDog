@@ -1,10 +1,11 @@
 @model WagDog.Models.Dog
 @using WagDog.Models
 @{
+    DogProfileViewModel EditProfile = new DogProfileViewModel();
     bool Editable = false;
     if(@ViewBag.currDogId == @Model.DogId){
-        DogProfileViewModel EditProfile = new DogProfileViewModel();
         EditProfile.DogId = @Model.DogId;
+        EditProfile.Email = @Model.Email;
         EditProfile.Breed = @Model.Breed;
         EditProfile.Age = @Model.Age;
         EditProfile.BodyType = @Model.BodyType;
@@ -68,16 +69,20 @@
         <div class="profileContent">
             <div class="profileTile">
                 <div class="leftPanelProfile">
-                    <img class="fullProfile" src=@Model.PhotoPath>
+                    @if(@Model.PhotoPath == null){
+                        <img class="fullProfile" src="/img/defaultDog.jpg">
+                    }else{
+                        <img class="fullProfile" src=@Model.PhotoPath>
+                    }
                     @if(@Editable){
-                        <button>Edit Profile</button>
+                        <button onClick="openEdit()">Edit Profile</button>
                     }else{
                         <ul class="icons">
-                            <li class="icons"><img class="icon" style="height:45px;" src="img/email.png"></li>
-                            <li class="icons"><img class="icon" style="height:37px;" src="img/msg.png"></li>
-                            <li class="icons"><img class="icon" style="height:40px;" src="img/wink.png"></li>
+                            <li class="icons"><img class="icon" style="height:45px;" src="/img/email.png"></li>
+                            <li class="icons"><img class="icon" style="height:37px;" src="/img/msg.png"></li>
+                            <li class="icons"><img class="icon" style="height:40px;" src="/img/wink.png"></li>
                         </ul>
-                    }
+                    }   
                 </div>
                 <div class="rightPanelProfile">
                     <h2>@Model.Name</h2>
@@ -148,6 +153,50 @@
         </div>
     </div>
 
+    @Html.Partial("ProfileUpdate", (DogProfileViewModel)@EditProfile)
+
 </body>
 
 </html>
+<script>
+
+    function openCategory(categoryName) {
+        var i;
+        var x = document.getElementsByClassName("category");
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none"; 
+        }
+        document.getElementById(categoryName).style.display = "block"; 
+    }
+
+    function openEdit(){
+        document.getElementById("RegModal").style.display = "block";
+        document.getElementById("profileCats").style.display = "block";
+        document.getElementById("submitProfile").style.display = "block";
+        openCategory('Age');
+    }
+
+    $(document).ready(function(){
+
+        $('form').submit(function(event){
+            event.preventDefault();
+        });
+
+        // Log/Reg Modal scripting:
+        var registrationModal = document.getElementById('RegModal');
+        var closeReg = document.getElementById("closeReg");
+
+        closeReg.onclick = function(){
+            registrationModal.style.display = "none";
+        }
+
+        var AgeSlider = document.getElementById("AgeSlider");
+        var AgeValue = document.getElementById("AgeValue");
+        AgeValue.innerHTML = AgeSlider.value; // Display the default slider value
+
+        // Update the current slider value (each time you drag the slider handle)
+        AgeSlider.oninput = function() {
+            AgeValue.innerHTML = this.value;
+        }
+    });
+</script>
