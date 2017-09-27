@@ -120,6 +120,7 @@ namespace WagDog.Controllers
             CurrentDog.Barking = DogModel.Barking; 
             CurrentDog.Accidents = DogModel.Accidents;
             CurrentDog.Breed = DogModel.Breed;
+            CurrentDog.Description = DogModel.Description;
             foreach(var animal in DogModel.Animals){
                 Cohab newCohab = new Cohab();
                 newCohab.DogId = CurrentDog.DogId;
@@ -189,8 +190,18 @@ namespace WagDog.Controllers
         [Route("Dashboard")]
         public IActionResult Dashboard(){
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");
-            Dog CurrentDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == dogId);
-            return View(CurrentDog);
+            // Dog CurrentDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == dogId);
+            // return View(CurrentDog);
+            return RedirectToAction("Profile", new { DogId = (int)dogId});
+        }
+
+        [HttpGet]
+        [Route("Profile/{DogId}")]
+        public IActionResult Profile(int DogId){
+            int? currDogId = HttpContext.Session.GetInt32("CurrentDog");
+            ViewBag.currDogId = (int)currDogId;
+            Dog ProfileDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == DogId);
+            return View(ProfileDog);
         }
 
         [HttpPost]
