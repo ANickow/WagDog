@@ -41,6 +41,15 @@ namespace WagDog.Controllers
             return View();
         }
 
+        [HttpGet]
+        [Route("UserProfile")]
+        public IActionResult Profile()
+        {
+            int? dogId = HttpContext.Session.GetInt32("CurrentDog");
+            Dog CurrentDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == dogId);
+            return View(CurrentDog);
+        }
+
         [HttpPost]
         [Route("PreRegister")]
         public JsonResult PreRegister(RegisterViewModel RegAuth)

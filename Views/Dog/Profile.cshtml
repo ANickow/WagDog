@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+@model WagDog.Models.Dog
 <html>
 
 <head>
@@ -19,7 +19,7 @@
 
         <div class="navigation">
             <ul>
-                <li><a href="#home">Home</a></li>
+                <li><a href="Dashboard">Home</a></li>
                 <li><a href="#news">Search</a></li>
                 <li><a href="#news">Matches</a></li>
             </ul>
@@ -29,7 +29,7 @@
                 <li class="dropdown">
                     <a href="javascript:void(0)" class="dropbtn">My Account</a>
                     <div class="dropdown-content">
-                        <a href="#">My Profile</a>
+                        <a href="UserProfile">My Profile</a>
                         <a href="#">Logout</a>
                         <a href="#">Preferences</a>
                         <a href="#">Settings</a>
@@ -54,40 +54,44 @@
                     <img class="preview" src="img/3.jpg">
                 </div>
                 <div class="rightPanelProfile">
-                    <h2>PuppyPauper</h2>
+                    <h2>@Model.Name</h2>
                     <ul>
-                        <li>25 DY | Male</li>
+                        <li>@Model.Age DY | Male</li>
                         <li>Chicago,Illinois</li>
                         <li>Seeking Play Date</li>
                     </ul>
                     <table class="infoTile">
                         <tr>
                             <td><strong>Body Type</strong></td>
-                            <td>Age</td>
+                            <td> @Model.BodyType</td>
                         </tr>
                         <tr>
                             <td><strong>Breed</strong></td>
-                            <td>Age</td>
+                            <td>@Model.Breed</td>
                         </tr>
                         <tr>
                             <td><strong>CoHabitants</strong></td>
-                            <td>50</td>
+                            <td>@foreach(var animal in @Model.Animals){
+                                @animal.Animal.Type
+                            }</td>
                         </tr>
                         <tr>
                             <td><strong>Family</strong></td>
-                            <td>50</td>
+                            <td>@foreach(var human in @Model.Humans){
+                                @human.Human.Relationship
+                            }</td>
                         </tr>
                         <tr>
                             <td><strong>Education</strong></td>
-                            <td>50</td>
+                            <td> @Model.HighestEducation</td>
                         </tr>
                         <tr>
                             <td><strong>Barking</strong></td>
-                            <td>50</td>
+                            <td>@Model.Barking</td>
                         </tr>
                         <tr>
                             <td><strong>Accidents</strong></td>
-                            <td>50</td>
+                            <td>@Model.Accidents</td>
                         </tr>
                     </table>
                 </div>
