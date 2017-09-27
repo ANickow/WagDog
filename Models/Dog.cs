@@ -17,6 +17,7 @@ namespace WagDog.Models
         public string HighestEducation { get; set; }
         public string Barking { get; set; }
         public string Accidents { get; set; }
+        public string PhotoPath { get; set; }
         public DateTime created_at { get; set; }
         public DateTime updated_at { get; set; }
         

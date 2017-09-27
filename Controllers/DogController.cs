@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using WagDog.Models;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 
 namespace WagDog.Controllers
 {
@@ -192,6 +193,23 @@ namespace WagDog.Controllers
             return View(CurrentDog);
         }
 
+        [HttpPost]
+        [Route("PhotoUpload")]
+        public async Task<IActionResult> PhotoUpload(IFormFile Photo)
+        {
+            int? dogId = HttpContext.Session.GetInt32("CurrentDog");
+            Dog CurrentDog = _context.Dogs.SingleOrDefault(dog => dog.DogId == dogId);
+            var path = Path.Combine(
+                        Directory.GetCurrentDirectory(), "wwwroot/profiles");
+            var fileName = CurrentDog.Name + Path.GetExtension(Photo.FileName);
+            CurrentDog.PhotoPath = "/profiles/" + fileName;
+            using (var fileStream = new FileStream(Path.Combine(path, fileName), FileMode.Create)){
+                Console.WriteLine("ready to save");
+                await Photo.CopyToAsync(fileStream);
+            }
+            _context.SaveChanges();
+            return RedirectToAction("Dashboard");
+        }
 // MESSAGES ROUTE**********************************************************************
         [HttpPost]
         [Route("PostMessage")]
