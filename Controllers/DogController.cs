@@ -42,6 +42,16 @@ namespace WagDog.Controllers
         }
 
         [HttpGet]
+        [Route("Search")]
+        public IActionResult Search()
+        {
+            int? dogId = HttpContext.Session.GetInt32("CurrentDog");
+            Dog CurrentDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == dogId);
+            List<Dog> Dogs = _context.Dogs.ToList();
+            return View(CurrentDog);
+        }
+
+        [HttpGet]
         [Route("UserProfile")]
         public IActionResult Profile()
         {
