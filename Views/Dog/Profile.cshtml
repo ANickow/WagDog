@@ -1,4 +1,29 @@
 @model WagDog.Models.Dog
+@using WagDog.Models
+@{
+    bool Editable = false;
+    if(@ViewBag.currDogId == @Model.DogId){
+        DogProfileViewModel EditProfile = new DogProfileViewModel();
+        EditProfile.DogId = @Model.DogId;
+        EditProfile.Breed = @Model.Breed;
+        EditProfile.Age = @Model.Age;
+        EditProfile.BodyType = @Model.BodyType;
+        EditProfile.HighestEducation = @Model.HighestEducation;
+        EditProfile.Barking = @Model.Barking;
+        EditProfile.Accidents = @Model.Accidents;
+        EditProfile.Description = @Model.Description;
+        foreach (var interest in @Model.Interests){
+            EditProfile.Interests.Add(@interest.InterestId);
+        }
+        foreach (var human in @Model.Humans){
+            EditProfile.Humans.Add(@human.HumanId);
+        }
+        foreach (var animal in @Model.Animals){
+            EditProfile.Animals.Add(@animal.AnimalId);
+        }
+        Editable = true;
+    }
+}
 <html>
 
 <head>
@@ -29,7 +54,7 @@
                 <li class="dropdown">
                     <a href="javascript:void(0)" class="dropbtn">My Account</a>
                     <div class="dropdown-content">
-                        <a href="UserProfile">My Profile</a>
+                        <a asp-controller="Dog" asp-action="Profile" asp-route-DogId=@ViewBag.currDogId>My Profile</a>
                         <a href="#">Logout</a>
                         <a href="#">Preferences</a>
                         <a href="#">Settings</a>
@@ -43,24 +68,28 @@
         <div class="profileContent">
             <div class="profileTile">
                 <div class="leftPanelProfile">
-                    <img class="fullProfile" src="img/frenchie.jpg">
-                    <ul class="icons">
-                        <li class="icons"><img class="icon" style="height:45px;" src="img/email.png"></li>
-                        <li class="icons"><img class="icon" style="height:37px;" src="img/msg.png"></li>
-                        <li class="icons"><img class="icon" style="height:40px;" src="img/wink.png"></li>
-                    </ul>
+                    <img class="fullProfile" src=@Model.PhotoPath>
+                    @if(@Editable){
+                        <button>Edit Profile</button>
+                    }else{
+                        <ul class="icons">
+                            <li class="icons"><img class="icon" style="height:45px;" src="img/email.png"></li>
+                            <li class="icons"><img class="icon" style="height:37px;" src="img/msg.png"></li>
+                            <li class="icons"><img class="icon" style="height:40px;" src="img/wink.png"></li>
+                        </ul>
+                    }
                 </div>
                 <div class="rightPanelProfile">
                     <h2>@Model.Name</h2>
                     <ul>
-                        <li>@Model.Age DY | Male</li>
+                        <li>@Model.Age Y | @(Model.Age*7) DY</li>
                         <li>Chicago,Illinois</li>
                         <li>Seeking Play Date</li>
                     </ul>
                     <table class="infoTile">
                         <tr>
                             <td><strong>Body Type</strong></td>
-                            <td> @Model.BodyType</td>
+                            <td>@Model.BodyType</td>
                         </tr>
                         <tr>
                             <td><strong>Breed</strong></td>
@@ -69,14 +98,22 @@
                         <tr>
                             <td><strong>CoHabitants</strong></td>
                             <td>@foreach(var animal in @Model.Animals){
-                                @animal.Animal.Type
-                            }</td>
+                                @animal.Animal.Type<span>  </span>
+                            }
+                            @if(@Model.Animals.Count == 0){
+                                <span>None</span>
+                            }
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Family</strong></td>
                             <td>@foreach(var human in @Model.Humans){
-                                @human.Human.Relationship
-                            }</td>
+                                @human.Human.Relationship<span>  </span>
+                            }
+                            @if(@Model.Humans.Count == 0){
+                                <span>None</span>
+                            }
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Education</strong></td>
@@ -95,18 +132,18 @@
             </div>
             <div class="profileInfo">
                 <h2> About Me </h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                    magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                    commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                    nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
-                    anim id est laborum.</p>
+                <p>@Model.Description</p>
 
-                <h2> What I'm Looking For </h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                    magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                    commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                    nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
-                    anim id est laborum.</p>
+                <h2> My Interests </h2>
+                <p>
+                    @foreach(var interest in @Model.Interests){
+                    <span>@interest.Interest.Description  </span>
+                    @if(@Model.Interests.Count == 0){
+                        <span>None</span>
+                    }
+                }
+                </p>
+                
             </div>
         </div>
     </div>

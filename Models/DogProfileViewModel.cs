@@ -16,7 +16,8 @@ namespace WagDog.Models
         public string BodyType { get; set; }
         public string HighestEducation { get; set; }
         public string Barking { get; set; }
-        public string Accidents { get; set; }        
+        public string Accidents { get; set; }   
+        public string Description { get; set; }     
         public List<int> Interests { get; set; }
         public List<int> Humans { get; set; }
         public List<int> Animals { get; set; }
