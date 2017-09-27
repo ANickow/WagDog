@@ -9,11 +9,5 @@ namespace WagDog.Models
     {
         public int HumanId { get; set; }
         public string Relationship { get; set; }
-        public List<Family> Dogs { get; set; }
-        public Human()
-        {
-            Dogs = new List<Family>();
-        }
-
     }
 }

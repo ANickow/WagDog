@@ -1,0 +1,23 @@
+@model WagDog.Models.Dog
+<h1>Dashboard</h1>
+<p>Id: @Model.DogId</p>
+<p>Name: @Model.Name</p>
+<p>Email: @Model.Email</p>
+<p>Breed: @Model.Breed</p>
+<p>Age: @Model.Age</p>
+<p>Body Type: @Model.BodyType</p>
+<p>Education: @Model.HighestEducation</p>
+<p>Barking: @Model.Barking</p>
+<p>Accidents: @Model.Accidents</p>
+<p>Cohabs:</p>
+@foreach(var animal in @Model.Animals){
+    <p>@animal.Animal.Type</p>
+}
+<p>Family:</p>
+@foreach(var human in @Model.Humans){
+    <p>@human.Human.Relationship</p>
+}
+<p>Interest:</p>
+@foreach(var interest in @Model.Interests){
+    <p>@interest.Interest.Description</p>
+}

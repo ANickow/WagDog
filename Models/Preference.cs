@@ -5,10 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
  
 namespace WagDog.Models
 {
-    public class Preferences : BaseEntity
+    public class Preference : BaseEntity
     {
-       public int PreferencesId { get; set; }
-       public int Value { get; set; }
+       public int PreferenceId { get; set; }
+       public string Detail { get; set; }
        public string Category { get; set; }
        public int DogId { get; set; }
        public bool DealBreaker { get; set; }

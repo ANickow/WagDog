@@ -1,4 +1,4 @@
-@model WagDog.Models.Dog
+@model WagDog.Models.DogProfileViewModel
 @using WagDog.Models
 
 <div id="RegModal" class="modal">
@@ -29,6 +29,7 @@
                 @if(@Model.Email == null){
                     @Html.Partial("PreRegister", (RegisterViewModel)@ViewBag.RegisterDog)
                 }
+                <form method="post" id="Profile">
                 <div id="Age" class="category" style="display:none">
                     <h2>Age</h2>
                     <label for="Age">Age: <span id="AgeValue"></span></label>
@@ -53,16 +54,16 @@
                     <h2>Co Habitation Status</h2>
                     <p>Select any animals you currently live with:</p>
                     <div class="flex-space-around">
-                        <div><input type="checkbox" name="Animals" value="Dog"><p>Dog(s)</p></div>
-                        <div><input type="checkbox" name="Animals" value="Cat"><p>Cat(s)</p></div>
-                        <div><input type="checkbox" name="Animals" value="Bird"><p>Bird(s)</p></div>
-                        <div><input type="checkbox" name="Animals" value="Reptile"><p>Reptile(s)</p></div>
+                        <div><input type="checkbox" name="Animals" value=1><p>Dog(s)</p></div>
+                        <div><input type="checkbox" name="Animals" value=2><p>Cat(s)</p></div>
+                        <div><input type="checkbox" name="Animals" value=3><p>Bird(s)</p></div>
+                        <div><input type="checkbox" name="Animals" value=4><p>Reptile(s)</p></div>
                     </div>
                     <br>
                     <div class="flex-space-around">
-                        <div><input type="checkbox" name="Animals" value="Fish"><p>Fish(s)</p></div>
-                        <div><input type="checkbox" name="Animals" value="Rodent"><p>Rodent(s)</p></div>
-                        <div><input type="checkbox" name="Animals" value="Other"><p>Other</p></div>
+                        <div><input type="checkbox" name="Animals" value=5><p>Fish(s)</p></div>
+                        <div><input type="checkbox" name="Animals" value=6><p>Rodent(s)</p></div>
+                        <div><input type="checkbox" name="Animals" value=7><p>Other</p></div>
                     </div>
                     <br>
                     <a class="modal-footer-link" onclick="openCategory('Family')">Next (Human Family)</a>
@@ -71,14 +72,14 @@
                     <h2>Family</h2>
                     <p>Select the member of your human family</p>
                     <div class="flex-space-around">
-                        <div><input type="checkbox" name="Humans" value="Mom<"><p>Mom(s)</p></div>
-                        <div><input type="checkbox" name="Humans" value="Dad<"><p>Dad(s)</p></div>
+                        <div><input type="checkbox" name="Humans" value=1><p>Mom(s)</p></div>
+                        <div><input type="checkbox" name="Humans" value=2><p>Dad(s)</p></div>
                     </div>
                     <br>
                     <div class="flex-space-around">
-                        <div><input type="checkbox" name="Humans" value="Sisters"><p>Sister(s)</p></div>
-                        <div><input type="checkbox" name="Humans" value="Brothers"><p>Brother(s)</p></div>
-                        <div><input type="checkbox" name="Humans" value="Other"><p>Other</p></div>
+                        <div><input type="checkbox" name="Humans" value=3><p>Sister(s)</p></div>
+                        <div><input type="checkbox" name="Humans" value=4><p>Brother(s)</p></div>
+                        <div><input type="checkbox" name="Humans" value=5><p>Other</p></div>
                     </div>
                     <br>
                     <a class="modal-footer-link" onclick="openCategory('Education')">Next (Education)</a>
@@ -122,6 +123,7 @@
                 <div id="Breed" class="category" style="display:none">
                     <h2>Breed</h2>
                     <select name="Breed">
+                        <option></option>
                         <option value="Beagle">Beagle</option>
                         <option value="Boxer">Boxer</option>
                         <option value="Bulldog">Bulldog</option>
@@ -142,17 +144,17 @@
                     <h2>Interests</h2>
                     <p>Select At Least 3</p>
                     <div class="flex-space-around">
-                        <div><input type="checkbox" name="Interests" value="Chasing"><p>Chasing Small Animals</p></div>
-                        <div><input type="checkbox" name="Interests" value="Frisbee"><p>Frisbee</p></div>
-                        <div><input type="checkbox" name="Interests" value="Treats"><p>Treats</p></div>
-                        <div><input type="checkbox" name="Interests" value="TugOWar"><p>Tug O' War</p></div>
+                        <div><input type="checkbox" name="Interests" value=1><p>Chasing Small Animals</p></div>
+                        <div><input type="checkbox" name="Interests" value=2><p>Frisbee</p></div>
+                        <div><input type="checkbox" name="Interests" value=3><p>Treats</p></div>
+                        <div><input type="checkbox" name="Interests" value=4><p>Tug O' War</p></div>
                     </div>
                     <br>
                     <div class="flex-space-around">
-                        <div><input type="checkbox" name="Interests" value="Digging"><p>Digging</p></div>
-                        <div><input type="checkbox" name="Interests" value="Chewing"><p>Chewing</p></div>
-                        <div><input type="checkbox" name="Interests" value="CelebrityDogs"><p>Celebrity Dogs</p></div>
-                        <div><input type="checkbox" name="Interests" value="Sniffing"><p>Sniffing</p></div>
+                        <div><input type="checkbox" name="Interests" value=5><p>Digging</p></div>
+                        <div><input type="checkbox" name="Interests" value=6><p>Chewing</p></div>
+                        <div><input type="checkbox" name="Interests" value=7><p>Celebrity Dogs</p></div>
+                        <div><input type="checkbox" name="Interests" value=8><p>Sniffing</p></div>
                     </div>
                     <br>
                     <a class="modal-footer-link" onclick="openCategory('Description')">Next (Describe yourself)</a>
@@ -172,7 +174,31 @@
                     <p>Select Category</p>
                 </div>
             <br/>
-            <button id="submitProfile" onclick="regPartTwo()" disabled style="display:none">Submit Your Profile</button>
+            </form>
+            <button id="submitProfile" onclick="updateProfile()" style="display:none">Submit Your Profile</button>
         </div>
     </div>
 </div>
+
+<script>
+    function updateProfile(){
+        var ProfileData = $("#Profile").serializeArray();
+        console.log(ProfileData);
+        var DogProfile = {};
+        DogProfile.Animals = [];
+        DogProfile.Humans = [];
+        DogProfile.Interests = [];
+        DogProfile.Preferences = [];
+        for (var i=0; i<ProfileData.length; i++){
+            var key = ProfileData[i]['name'];
+            if (key == "Animals" || key == "Humans" || key == "Interests" || key == "Preferences"){
+                DogProfile[key].push(ProfileData[i]['value']);
+            } else {
+                DogProfile[key] = ProfileData[i]['value'];
+            }
+        }
+        $.post("UpdateProfile", DogProfile, function(response){
+            window.location.replace("Dashboard")
+        });
+    }
+</script>

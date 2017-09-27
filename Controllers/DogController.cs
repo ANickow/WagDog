@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using WagDog.Models;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace WagDog.Controllers
 {
@@ -23,7 +24,7 @@ namespace WagDog.Controllers
         public IActionResult Index()
         {
             ViewBag.RegisterDog = new RegisterViewModel();
-            ViewBag.ProfileDog = new Dog();
+            ViewBag.ProfileDog = new DogProfileViewModel();
             ViewBag.LoginDog = new LoginViewModel();
             return View();
         }
@@ -89,35 +90,39 @@ namespace WagDog.Controllers
 
         [HttpPost]
         [Route("UpdateProfile")]
-        public IActionResult UpdateProfile(RegisterViewModel RegAuth)
+        public JsonResult UpdateProfile(DogProfileViewModel DogModel)
         {
-            if (ModelState.IsValid)
-            {
-                Dog CurrentDog = _context.Dogs.SingleOrDefault(dogs => dogs.Email == RegAuth.Email);
-                if(CurrentDog != null) 
-                {
-                    ModelState.AddModelError("Email", "That email already exists");
-                    return View("index", RegAuth);
-                }
-                 Dog NewDog = new Dog
-                {
-                    Name = RegAuth.Name,
-                    Email = RegAuth.Email,
-                    Password = RegAuth.Password,
-                    created_at = DateTime.Now,
-                    updated_at = DateTime.Now
-
-                };
-                _context.Add(NewDog);
-                _context.SaveChanges();
-                CurrentDog = _context.Dogs.SingleOrDefault(dog => dog.Email == NewDog.Email);
-                HttpContext.Session.SetInt32("CurrentDog", (int)CurrentDog.DogId);
-                return Redirect("LANDING_PAGE");
-            }
-            else
-            {
-                return View("index", RegAuth);
-            }
+            int? dogId = HttpContext.Session.GetInt32("CurrentDog");
+            Dog CurrentDog = _context.Dogs.SingleOrDefault(dog => dog.DogId == dogId);
+            CurrentDog.Age = DogModel.Age;
+            CurrentDog.BodyType = DogModel.BodyType;
+            CurrentDog.HighestEducation = DogModel.HighestEducation;
+            CurrentDog.Barking = DogModel.Barking; 
+            CurrentDog.Accidents = DogModel.Accidents;
+            CurrentDog.Breed = DogModel.Breed;
+            foreach(var animal in DogModel.Animals){
+                Cohab newCohab = new Cohab();
+                newCohab.DogId = CurrentDog.DogId;
+                newCohab.AnimalId = animal;
+                CurrentDog.Animals.Add(newCohab);
+                _context.Cohabs.Add(newCohab);
+            }   
+            foreach(var human in DogModel.Humans){
+                Family newFamily = new Family();
+                newFamily.DogId = CurrentDog.DogId;
+                newFamily.HumanId = human;
+                CurrentDog.Humans.Add(newFamily);
+                _context.Families.Add(newFamily);
+            }   
+            foreach(var interest in DogModel.Interests){
+                DogInterest newInterest = new DogInterest();
+                newInterest.DogId = CurrentDog.DogId;
+                newInterest.InterestId = interest;
+                CurrentDog.Interests.Add(newInterest);
+                _context.DogInterests.Add(newInterest);
+            } 
+            _context.SaveChanges();
+            return Json(CurrentDog);
         }
 
         [HttpPost]
@@ -163,7 +168,9 @@ namespace WagDog.Controllers
         [HttpGet]
         [Route("Dashboard")]
         public IActionResult Dashboard(){
-            return View("LANDING_PAGE");
+            int? dogId = HttpContext.Session.GetInt32("CurrentDog");
+            Dog CurrentDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == dogId);
+            return View(CurrentDog);
         }
 
 // MESSAGES ROUTE**********************************************************************

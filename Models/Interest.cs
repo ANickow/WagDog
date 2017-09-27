@@ -9,11 +9,5 @@ namespace WagDog.Models
     {
         public int InterestId { get; set; }
         public string Description { get; set; }
-        public List<DogInterest> Dogs { get; set; }
-        public Interest()
-        {
-            Dogs = new List<DogInterest>();
-        }
-
     }
 }

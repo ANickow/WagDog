@@ -7,7 +7,7 @@
 </div>
 @Html.Partial("Login", (LoginViewModel)@ViewBag.LoginDog)
 
-@Html.Partial("ProfileUpdate", (Dog)@ViewBag.ProfileDog)
+@Html.Partial("ProfileUpdate", (DogProfileViewModel)@ViewBag.ProfileDog)
 
 <script>
     //Registration Tab Navigation Bar:
@@ -41,7 +41,6 @@
             }
         });
     }
-
 
     function login(){
         var loginDog = {

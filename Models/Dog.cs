@@ -24,14 +24,14 @@ namespace WagDog.Models
         public List<DogInterest> Interests { get; set; }
         public List<Family> Humans { get; set; }
         public List<Cohab> Animals { get; set; }
-        public List<Preferences> Preferences { get; set; }
+        public List<Preference> Preferences { get; set; }
 
         public Dog()
         {
             Interests = new List<DogInterest>();
             Humans = new List<Family>();
             Animals = new List<Cohab>();
-            Preferences = new List<Preferences>();
+            Preferences = new List<Preference>();
         }
     }
 }

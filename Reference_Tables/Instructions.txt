@@ -1,0 +1,20 @@
+Setting up your Reference Tables (Animals, Humans, Interests):
+
+** NOTE: You should only need to do this ONCE, unless you have to drop your database and rebuild it. **
+
+These instructions are modified from the ones here: http://www.postgresqltutorial.com/import-csv-file-into-posgresql-table/
+
+** NOTE: These instructions also guide you through creating the table, but since we used CodeFirst table creation, we don't need those steps.
+    Additionally, I skipped over the import by SQL query to the direct import through pgAdmin.  However, those import steps were written for an earlier version.  I've adjusted as needed below.
+
+For each of the reference tables to import:
+    1) In pgAdmin, navigate to that table, right click on the table name and select "Import/Export"
+    2) At the top, make sure to change the toggle from "Export" to "Import"
+    3) Copy the file path for the related csv file (right click on it in VSCode and select "Copy Path")
+    4) Paste the file path in the field for "Filename"
+    5) Make sure the format is csv (should be the default)
+    6) In the "Miscellaneous section":
+        - Switch "HEADER" to yes
+        - Select the comma from the Delimiter options 
+    7) Click "OK"
+    8) Make sure everything worked by viewing all rows of the table! (If not, let me know and I'll troubleshoot)!
