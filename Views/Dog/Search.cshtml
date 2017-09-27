@@ -19,8 +19,8 @@
 
         <div class="navigation">
             <ul>
-                <li><a href="Dashboard">Home</a></li>
-                <li><a href="search">Search</a></li>
+                <li><a href="/Dashboard">Home</a></li>
+                <li><a href="/Search">Search</a></li>
                 <li><a href="#news">Matches</a></li>
             </ul>
 
@@ -43,6 +43,7 @@
         <div class="Content">
         <h1> Search </h1>
         @foreach(var dog in @ViewBag.Dogs){
+            <a href="Profile/@dog.DogId">
             <div class="searchTile">
                 <div style="height:175px;width:175px;background-color:whitesmoke;margin:auto;">
                 </div>
@@ -51,8 +52,7 @@
                 @dog.Breed
                 </div>
             </div>
-
-
+            </a>
         }
 
         
