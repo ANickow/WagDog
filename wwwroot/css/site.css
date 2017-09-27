@@ -429,6 +429,7 @@ img.fullProfile{
     border:5px solid white;
     margin-bottom:15px;
 }
+
 ul.icons{
     margin-top:0px;
     margin-bottom:5px;
@@ -451,7 +452,14 @@ table.infoTile{
     margin:auto;
     margin-top:45px;
 }
-
+div.searchTile{
+    background-color: white;
+    box-shadow: 2px 2px 6px #888888;
+    height: 240px;
+    width:200px;
+    display: inline-block;
+    padding:10px;
+}
 
 
 

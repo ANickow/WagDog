@@ -1,4 +1,4 @@
-@model WagDog.Models.Dog
+@model IEnumerable<WagDog.Models.Dog>
 <html>
 
 <head>
@@ -19,8 +19,8 @@
 
         <div class="navigation">
             <ul>
-                <li><a href="Dashboard">Home</a></li>
-                <li><a href="search">Search</a></li>
+                <li><a href="/Dashboard">Home</a></li>
+                <li><a href="/Search">Search</a></li>
                 <li><a href="#news">Matches</a></li>
             </ul>
 
@@ -42,6 +42,18 @@
         <br>
         <div class="Content">
         <h1> Search </h1>
+        @foreach(var dog in @ViewBag.Dogs){
+            <a href="Profile/@dog.DogId">
+            <div class="searchTile">
+                <div style="height:175px;width:175px;background-color:whitesmoke;margin:auto;">
+                </div>
+                <div style="text-align: center;margin-top:10px;">
+                @dog.Name @dog.Age<br>
+                @dog.Breed
+                </div>
+            </div>
+            </a>
+        }
 
         
 
