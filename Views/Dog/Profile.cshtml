@@ -4,7 +4,7 @@
 @{
     DogProfileViewModel EditProfile = new DogProfileViewModel();
     bool Editable = false;
-    if(@ViewBag.currDogId == @Model.DogId){
+    
         EditProfile.DogId = @Model.DogId;
         EditProfile.Email = @Model.Email;
         EditProfile.Breed = @Model.Breed;
@@ -24,7 +24,7 @@
             EditProfile.Animals.Add(@animal.AnimalId);
         }
         Editable = true;
-    }
+    
 }
 <html>
 
