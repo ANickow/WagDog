@@ -10,6 +10,7 @@ namespace WagDog.Models
         public int MessageId { get; set; }
         public string MessageContent { get; set; }
         public int SenderId { get; set; }
+        public Dog Sender { get; set; }
         public int ReceiverId { get; set; }
 
         public DateTime created_at { get; set; }

@@ -194,6 +194,13 @@ namespace WagDog.Controllers
         }
 
         [HttpGet]
+        [Route("Logout")]
+        public IActionResult Logout(){
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
         [Route("Dashboard")]
         public IActionResult Dashboard(){
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");
@@ -228,6 +235,74 @@ namespace WagDog.Controllers
             _context.SaveChanges();
             return RedirectToAction("Profile", new{ DogId = dogId});
         }
+
+        [HttpPost]
+        [Route("SetPreferences")]
+        public IActionResult SetPreferences(int PrefAge, int PrefBreed, int PrefBodyType, int PrefEducation, int PrefAccidents, int PrefBarking){
+            int? dogId = HttpContext.Session.GetInt32("CurrentDog");
+            Dog CurrentDog = _context.Dogs.Include(d=> d.Preferences).ThenInclude(p => p.Filter).SingleOrDefault(dog => dog.DogId == dogId);
+            List<Preference> AllNewPreferences = new List<Preference>();
+            if (PrefAge > 0)
+                { 
+                    Preference currPrefAge = CurrentDog.Preferences.SingleOrDefault(p => p.Filter.Category == "Age");
+                    if(currPrefAge != null){_context.Preferences.Remove(currPrefAge);}
+                    Preference newPreference = new Preference();
+                    newPreference.DogId = CurrentDog.DogId;
+                    newPreference.FilterId = PrefAge;
+                    AllNewPreferences.Add(newPreference);
+                }
+            if (PrefBreed > 0)
+                { 
+                    Preference currPrefBreed = CurrentDog.Preferences.SingleOrDefault(p => p.Filter.Category == "Breed");
+                    if(currPrefBreed != null){_context.Preferences.Remove(currPrefBreed);}
+                    Preference newPreference = new Preference();
+                    newPreference.DogId = CurrentDog.DogId;
+                    newPreference.FilterId = PrefBreed;
+                    AllNewPreferences.Add(newPreference);
+                }
+            if (PrefBodyType > 0)
+                { 
+                    Preference currPrefBodyType = CurrentDog.Preferences.SingleOrDefault(p => p.Filter.Category == "BodyType");
+                    if(currPrefBodyType != null){_context.Preferences.Remove(currPrefBodyType);}
+                    Preference newPreference = new Preference();
+                    newPreference.DogId = CurrentDog.DogId;
+                    newPreference.FilterId = PrefBodyType;
+                    AllNewPreferences.Add(newPreference);
+                }
+            if (PrefEducation > 0)
+                { 
+                    Preference currPrefEducation = CurrentDog.Preferences.SingleOrDefault(p => p.Filter.Category == "Education");
+                    if(currPrefEducation != null){_context.Preferences.Remove(currPrefEducation);}
+                    Preference newPreference = new Preference();
+                    newPreference.DogId = CurrentDog.DogId;
+                    newPreference.FilterId = PrefEducation;
+                    AllNewPreferences.Add(newPreference);
+                }
+            if (PrefAccidents > 0)
+                { 
+                    Preference currPrefAccidents = CurrentDog.Preferences.SingleOrDefault(p => p.Filter.Category == "Accidents");
+                    if(currPrefAccidents != null){_context.Preferences.Remove(currPrefAccidents);}
+                    Preference newPreference = new Preference();
+                    newPreference.DogId = CurrentDog.DogId;
+                    newPreference.FilterId = PrefAccidents;
+                    AllNewPreferences.Add(newPreference);
+                }
+            if (PrefBarking > 0)
+                { 
+                    Preference currPrefBarking = CurrentDog.Preferences.SingleOrDefault(p => p.Filter.Category == "Barking");
+                    if(currPrefBarking != null){_context.Preferences.Remove(currPrefBarking);}
+                    Preference newPreference = new Preference();
+                    newPreference.DogId = CurrentDog.DogId;
+                    newPreference.FilterId = PrefBarking;
+                    AllNewPreferences.Add(newPreference);
+                }
+            foreach (Preference preference in AllNewPreferences){
+                _context.Add(preference);
+            }
+            _context.SaveChanges();   
+            return RedirectToAction("Profile", new{ DogId = dogId});
+        }
+
 // MESSAGES ROUTE**********************************************************************
         [HttpPost]
         [Route("PostMessage")]

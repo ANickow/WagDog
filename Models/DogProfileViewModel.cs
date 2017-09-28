@@ -21,7 +21,7 @@ namespace WagDog.Models
         public List<int> Interests { get; set; }
         public List<int> Humans { get; set; }
         public List<int> Animals { get; set; }
-        public List<string> Preferences { get; set; }
+        public List<int> Preferences { get; set; }
 
         public DogProfileViewModel()
         {
@@ -29,7 +29,7 @@ namespace WagDog.Models
             Interests = new List<int>();
             Humans = new List<int>();
             Animals = new List<int>();
-            Preferences = new List<string>();
+            Preferences = new List<int>();
         }
     }
 }
