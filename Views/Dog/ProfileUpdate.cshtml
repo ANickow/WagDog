@@ -33,7 +33,6 @@
                     <li><a onclick="openCategory('Breed')"><i class="material-icons">&#xE91D;</i></a></li>
                     <li><a onclick="openCategory('Interests')"><i class="material-icons">&#xE24E;</i></a></li>
                     <li><a onclick="openCategory('Description')"><i class="material-icons">&#xE254;</i></a></li>
-                    <li><a onclick="openCategory('Preferences')"><i class="material-icons">&#xE87D;</i></a></li>
                 </ul>
             </div>
         </div>
@@ -219,11 +218,6 @@
                     <h2>Description</h2>
                     <textarea name="Description" rows="4" cols="100" placeholder="What should other dogs know about you?">@Model.Description</textarea>
                     <br>
-                    <a class="modal-footer-link" onclick="openCategory('Preferences')">Next (Preferences)</a>
-                </div>
-                <div id="Preferences" class="category" style="display:none">
-                    <h2>Preferences</h2>
-                    <p>Select Category</p>
                 </div>
             <br/>
             </form>
