@@ -48,6 +48,9 @@ namespace WagDog.Controllers
         public IActionResult Search()
         {
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");
+            if (dogId == null){
+                return RedirectToAction("index");
+            }
             Dog CurrentDog = _context.Dogs.Include(d => d.Preferences).ThenInclude(p => p.Filter).SingleOrDefault(dog => dog.DogId == dogId);
             IEnumerable<Dog> Dogs = _context.Dogs.Where(d => d.DogId != dogId).ToList();
             List<Filter> SearchFilters = HttpContext.Session.GetObjectFromJson<List<Filter>>("SearchFilters");
@@ -105,6 +108,9 @@ namespace WagDog.Controllers
         [Route("ProcessSearch")]
         public IActionResult ProcessSearch(int PrefAge, int PrefBreed, int PrefBodyType, int PrefEducation, int PrefAccidents, int PrefBarking){
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");
+            if (dogId == null){
+                return RedirectToAction("index");
+            }
             Dog CurrentDog = _context.Dogs.Include(d=> d.Preferences).ThenInclude(p => p.Filter).SingleOrDefault(dog => dog.DogId == dogId);
             List<Filter> AllSearchFilters = new List<Filter>();
             if (PrefAge > 0)
@@ -158,6 +164,9 @@ namespace WagDog.Controllers
         public IActionResult Profile()
         {
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");
+            if (dogId == null){
+                return RedirectToAction("index");
+            }
             Dog CurrentDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == dogId);
             return View(CurrentDog);
         }
@@ -214,6 +223,7 @@ namespace WagDog.Controllers
         public JsonResult UpdateProfile(DogProfileViewModel DogModel)
         {
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");
+            
             Dog CurrentDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == dogId);
             CurrentDog.Age = DogModel.Age;
             CurrentDog.BodyType = DogModel.BodyType;
@@ -316,6 +326,9 @@ namespace WagDog.Controllers
         [Route("Dashboard")]
         public IActionResult Dashboard(){
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");
+            if (dogId == null){
+                return RedirectToAction("index");;
+            }
             // Dog CurrentDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == dogId);
             // return View(CurrentDog);
             return RedirectToAction("Profile", new { DogId = (int)dogId});
@@ -455,7 +468,7 @@ namespace WagDog.Controllers
 
             int? loggedInId = HttpContext.Session.GetInt32("CurrentDog");
             if (loggedInId == null){
-                // WHERE DO YOU WANT TO GO IF NOT LOGGED IN????**********************
+                return RedirectToAction("index");
             }
 
             if (ModelState.IsValid)

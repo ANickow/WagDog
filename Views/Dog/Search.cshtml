@@ -21,6 +21,21 @@
         @Html.Partial("NavBar")
 
         <br>
+        <div style="margin-bottom:50px;" class="profileContent">
+            <div>
+            <h1 style="display:inline-block"> Search </h1> 
+            <div class="dropdown" style="display: inline-block;float:right;margin-top:10px;">
+                <button onclick="myFunction()" class="tablinks">Sort By</button>
+                <div id="myDropdown" class="dropdown-content">
+                    <a href="#" onclick="sort(Youngest)">Youngest</a>
+                    <a href="#">Oldest</a>
+                    <a href="#">Recent Member</a>
+                    <a href="#">Oldest Member</a>
+                </div>
+            </div>
+        </div>
+      
+        @foreach(var dog in @ViewBag.Dogs){
         <div class="profileContent">
         <button onClick="openPref()">Set your search</button>
         <br/>
@@ -138,8 +153,29 @@
 </div>
 </div>
 </html>
-
 <script>
+    sort(){
+    $.post("/sort")
+
+    }
+    function myFunction() {
+    document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
     var closePref = document.getElementById("closePref");
     var pref = document.getElementById("PrefModal");
 
