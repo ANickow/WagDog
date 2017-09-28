@@ -114,7 +114,7 @@ namespace WagDog.Controllers
         public JsonResult UpdateProfile(DogProfileViewModel DogModel)
         {
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");
-            Dog CurrentDog = _context.Dogs.SingleOrDefault(dog => dog.DogId == dogId);
+            Dog CurrentDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == dogId);
             CurrentDog.Age = DogModel.Age;
             CurrentDog.BodyType = DogModel.BodyType;
             CurrentDog.HighestEducation = DogModel.HighestEducation;
@@ -123,25 +123,31 @@ namespace WagDog.Controllers
             CurrentDog.Breed = DogModel.Breed;
             CurrentDog.Description = DogModel.Description;
             foreach(var animal in DogModel.Animals){
-                Cohab newCohab = new Cohab();
-                newCohab.DogId = CurrentDog.DogId;
-                newCohab.AnimalId = animal;
-                CurrentDog.Animals.Add(newCohab);
-                _context.Cohabs.Add(newCohab);
+                if(CurrentDog.Animals.Where(a => a.AnimalId == animal).ToList().Count == 0){
+                    Cohab newCohab = new Cohab();
+                    newCohab.DogId = CurrentDog.DogId;
+                    newCohab.AnimalId = animal;
+                    CurrentDog.Animals.Add(newCohab);
+                    _context.Cohabs.Add(newCohab);
+                }
             }   
             foreach(var human in DogModel.Humans){
-                Family newFamily = new Family();
-                newFamily.DogId = CurrentDog.DogId;
-                newFamily.HumanId = human;
-                CurrentDog.Humans.Add(newFamily);
-                _context.Families.Add(newFamily);
+                if(CurrentDog.Humans.Where(h => h.HumanId == human).ToList().Count == 0){
+                    Family newFamily = new Family();
+                    newFamily.DogId = CurrentDog.DogId;
+                    newFamily.HumanId = human;
+                    CurrentDog.Humans.Add(newFamily);
+                    _context.Families.Add(newFamily);
+                }
             }   
             foreach(var interest in DogModel.Interests){
-                DogInterest newInterest = new DogInterest();
-                newInterest.DogId = CurrentDog.DogId;
-                newInterest.InterestId = interest;
-                CurrentDog.Interests.Add(newInterest);
-                _context.DogInterests.Add(newInterest);
+                if(CurrentDog.Interests.Where(i => i.InterestId == interest).ToList().Count == 0){
+                    DogInterest newInterest = new DogInterest();
+                    newInterest.DogId = CurrentDog.DogId;
+                    newInterest.InterestId = interest;
+                    CurrentDog.Interests.Add(newInterest);
+                    _context.DogInterests.Add(newInterest);
+                }
             } 
             _context.SaveChanges();
             return Json(CurrentDog);
@@ -229,7 +235,7 @@ namespace WagDog.Controllers
                 await Photo.CopyToAsync(fileStream);
             }
             _context.SaveChanges();
-            return RedirectToAction("Dashboard");
+            return RedirectToAction("Profile", new{ DogId = dogId});
         }
 // MESSAGES ROUTE**********************************************************************
         [HttpPost]

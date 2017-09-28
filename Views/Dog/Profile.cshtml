@@ -1,10 +1,11 @@
 @model WagDog.Models.Dog
 @using WagDog.Models
 @{
+    DogProfileViewModel EditProfile = new DogProfileViewModel();
     bool Editable = false;
     if(@ViewBag.currDogId == @Model.DogId){
-        DogProfileViewModel EditProfile = new DogProfileViewModel();
         EditProfile.DogId = @Model.DogId;
+        EditProfile.Email = @Model.Email;
         EditProfile.Breed = @Model.Breed;
         EditProfile.Age = @Model.Age;
         EditProfile.BodyType = @Model.BodyType;
@@ -68,16 +69,24 @@
         <div class="profileContent">
             <div class="profileTile">
                 <div class="leftPanelProfile">
-                    <img class="fullProfile" src="/img/frenchie.jpg">
+                    @if(@Model.PhotoPath == null && @Editable){
+                        <img class="fullProfile" id="openPhoto" src="/img/defaultDog.jpg">
+                    }
+                    @if(@Model.PhotoPath == null && !@Editable){
+                        <img class="fullProfile" src="/img/defaultDog.jpg">
+                        }
+                    @if(@Model.PhotoPath != null){
+                        <img class="fullProfile" src=@Model.PhotoPath>
+                    }
                     @if(@Editable){
-                        <button>Edit Profile</button>
+                        <button onClick="openEdit()">Edit Profile</button>
                     }else{
                         <ul class="icons">
                             <li class="icons"><a href="mailto:@Model.Email"><img class="icon" style="height:45px;" src="/img/email.png"></a></li>
                             <li class="icons"><a href="#newMessage"><img class="icon" style="height:37px;" src="/img/msg.png"></a></li>
                             <li class="icons"><img class="icon" style="height:40px;" src="/img/wink.png"></li>
                         </ul>
-                    }
+                    }   
                 </div>
                 <div class="rightPanelProfile">
                     <h2>@Model.Name</h2>
@@ -153,7 +162,7 @@
     
     <div class="messageBox" style="vertical-align: top;">
         <p style="display:inline-block;">Send To: @Model.Name</p>
-        <form class="close" action="sendMessage" style="display:inline-block;">
+        <form class="close" action="#" style="display:inline-block;">
             <button style="background-color: whitesmoke;" class="tablinks" type="submit">close</button>
         </form>
 
@@ -165,7 +174,85 @@
     </div>
     
     </a>
+    @Html.Partial("ProfileUpdate", (DogProfileViewModel)@EditProfile)
+
+<div id="PhotoModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="close" id="closePhoto">&times;</span>
+            <h2>Show everyone how heckin cute you are!</h2>
+        </div>
+        <div class="modal-body">
+                <p>Select a photo for upload</p>
+                <form method="post" enctype="multipart/form-data" asp-controller="Dog" asp-action="PhotoUpload">
+                    <input type="file" name="Photo" accept="image/*" />
+                    <button>Submit</button>
+                </form>
+        </div>
+    </div>
+</div>
 
 </body>
 
 </html>
+<script>
+
+    function openCategory(categoryName) {
+        var i;
+        var x = document.getElementsByClassName("category");
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none"; 
+        }
+        document.getElementById(categoryName).style.display = "block"; 
+    }
+
+    function openEdit(){
+        document.getElementById("RegModal").style.display = "block";
+        document.getElementById("profileCats").style.display = "block";
+        document.getElementById("submitProfile").style.display = "block";
+        openCategory('Age');
+    }
+
+
+    var photo = document.getElementById('PhotoModal');
+    var openPhoto = document.getElementById("openPhoto");
+    var closePhoto = document.getElementById("closePhoto");
+
+    openPhoto.onclick = function() {
+        photo.style.display = "block";
+    }
+
+    closePhoto.onclick = function() {
+        photo.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    $(document).ready(function(){
+
+        $('#dashboard').submit(function(event){
+            event.preventDefault();
+        });
+
+        // Log/Reg Modal scripting:
+        var registrationModal = document.getElementById('RegModal');
+        var closeReg = document.getElementById("closeReg");
+
+        closeReg.onclick = function(){
+            registrationModal.style.display = "none";
+        }
+
+        var AgeSlider = document.getElementById("AgeSlider");
+        var AgeValue = document.getElementById("AgeValue");
+        AgeValue.innerHTML = AgeSlider.value; // Display the default slider value
+
+        // Update the current slider value (each time you drag the slider handle)
+        AgeSlider.oninput = function() {
+            AgeValue.innerHTML = this.value;
+        }
+    });
+</script>

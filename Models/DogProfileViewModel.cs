@@ -25,6 +25,7 @@ namespace WagDog.Models
 
         public DogProfileViewModel()
         {
+            Age = 5;
             Interests = new List<int>();
             Humans = new List<int>();
             Animals = new List<int>();
