@@ -7,10 +7,10 @@ namespace WagDog.Models
 {
     public class SearchWrapper : BaseEntity
     {
-        public List<Dog> Dogs { get; set; }
+        public IEnumerable<Dog> Dogs { get; set; }
         public List<Filter> Filters { get; set; }
 
-        public SearchWrapper(List<Dog> d, List<Filter> f){
+        public SearchWrapper(IEnumerable<Dog> d, List<Filter> f){
             Dogs = d;
             Filters = f;
         }
