@@ -29,7 +29,7 @@
                 <li class="dropdown">
                     <a href="javascript:void(0)" class="dropbtn">My Account</a>
                     <div class="dropdown-content">
-                        <a href="UserProfile">My Profile</a>
+                        <a href="/Dashboard">My Profile</a>
                         <a href="#">Logout</a>
                         <a href="#">Preferences</a>
                         <a href="#">Settings</a>
@@ -40,8 +40,20 @@
         </div>
 
         <br>
-        <div class="profileContent">
-        <h1> Search </h1>
+        <div style="margin-bottom:50px;" class="profileContent">
+            <div>
+            <h1 style="display:inline-block"> Search </h1> 
+            <div class="dropdown" style="display: inline-block;float:right;margin-top:10px;">
+                <button onclick="myFunction()" class="tablinks">Sort By</button>
+                <div id="myDropdown" class="dropdown-content">
+                    <a href="#" onclick="sort(Youngest)">Youngest</a>
+                    <a href="#">Oldest</a>
+                    <a href="#">Recent Member</a>
+                    <a href="#">Oldest Member</a>
+                </div>
+            </div>
+        </div>
+      
         @foreach(var dog in @ViewBag.Dogs){
             <div class="searchTile">
             <a href="Profile/@dog.DogId">
@@ -66,3 +78,27 @@
 </div>
 </div>
 </html>
+<script>
+    sort(){
+    $.post("/sort")
+
+    }
+    function myFunction() {
+    document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script>

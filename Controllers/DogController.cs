@@ -57,30 +57,30 @@ namespace WagDog.Controllers
                 IEnumerable<Dog> Dogs = _context.Dogs.ToList();
                 ViewBag.Dogs=_context.Dogs.ToList();
                 return View("Search");
-            } if (length == 1){
-                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0]).ToList();
-                ViewBag.Dogs = _context.Dogs.ToList();
-                return View("Search");
-            } if (length == 2){
-                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1]).ToList();
-                ViewBag.Dogs = _context.Dogs.ToList();
-                return View("Search");
-            } if (length == 3){
-                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1] && x.PrefList == PrefList[2]).ToList();
-                ViewBag.Dogs = _context.Dogs.ToList();
-                return View("Search");
-            } if (length == 4){
-                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1] && x.PrefList == PrefList[2] && x.PrefList == PrefList[3]).ToList();
-                ViewBag.Dogs = _context.Dogs.ToList();
-                return View("Search");
-            } if (length == 5){
-                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1] && x.PrefList == PrefList[2] && x.PrefList == PrefList[3] && x.PrefList == PrefList[4]).ToList();
-                ViewBag.Dogs = _context.Dogs.ToList();
-                return View("Search");
-            } if (length == 6){
-                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1] && x.PrefList == PrefList[2] && x.PrefList == PrefList[3] && x.PrefList == PrefList[4] && x.PrefList == PrefList[5]).ToList();
-                ViewBag.Dogs = _context.Dogs.ToList();
-                return View("Search");
+            // } if (length == 1){
+            //     IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0]).ToList();
+            //     ViewBag.Dogs = _context.Dogs.ToList();
+            //     return View("Search");
+            // } if (length == 2){
+            //     IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1]).ToList();
+            //     ViewBag.Dogs = _context.Dogs.ToList();
+            //     return View("Search");
+            // } if (length == 3){
+            //     IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1] && x.PrefList == PrefList[2]).ToList();
+            //     ViewBag.Dogs = _context.Dogs.ToList();
+            //     return View("Search");
+            // } if (length == 4){
+            //     IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1] && x.PrefList == PrefList[2] && x.PrefList == PrefList[3]).ToList();
+            //     ViewBag.Dogs = _context.Dogs.ToList();
+            //     return View("Search");
+            // } if (length == 5){
+            //     IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1] && x.PrefList == PrefList[2] && x.PrefList == PrefList[3] && x.PrefList == PrefList[4]).ToList();
+            //     ViewBag.Dogs = _context.Dogs.ToList();
+            //     return View("Search");
+            // } if (length == 6){
+            //     IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1] && x.PrefList == PrefList[2] && x.PrefList == PrefList[3] && x.PrefList == PrefList[4] && x.PrefList == PrefList[5]).ToList();
+            //     ViewBag.Dogs = _context.Dogs.ToList();
+            //     return View("Search");
             }
             // WHERE TO RETURN TO ********************************************************************
           return View("Index");  
