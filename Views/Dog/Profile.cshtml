@@ -85,7 +85,7 @@
                         <ul class="icons">
                             <li class="icons"><a href="mailto:@Model.Email"><img class="icon" style="height:45px;" src="/img/email.png"></a></li>
                             <li class="icons"><a href="#newMessage"><img class="icon" style="height:37px;" src="/img/msg.png"></a></li>
-                            <li class="icons"><img class="icon" style="height:40px;" src="/img/wink.png"></li>
+                            <li class="icons"><a href="#newWink"><img class="icon" style="height:40px;" src="/img/wink.png"></a></li>
                         </ul>
                     }   
                 </div>
@@ -151,7 +151,7 @@
                     @if(@Model.Interests.Count == 0){
                         <span>None</span>
                     }
-                }
+                } 
                 </p>
                 
             </div>
@@ -167,14 +167,34 @@
             <button style="background-color: whitesmoke;" class="tablinks" type="submit">close</button>
         </form>
 
-        <form class="message" action="sendMessage" style="width:350px; margin:auto;margin-top:10px;">
-            <input type="text" class="message" style="background-color:white;width:350px;height:120px;"><br>
+        <form class="message"  action="/sendMessage" style="width:350px; margin:auto;margin-top:10px;" method="POST">
+            <input type="hidden" value="@Model.DogId" name="reciever">
+            <input type="text" class="message" name="MessageContent" style="background-color:white;width:350px;height:120px;"><br>
             <button style="background-color:#FB8C00;color:white;" class="tablinks" type="submit">submit</button>
         </form>
 
     </div>
     
     </a>
+
+    <a class="lightbox" id="newWink">
+    
+    <div class="messageBox" style="vertical-align: top; text-align:center;">
+        <p style="display:inline-block;margin-top:30px;">Send A Wink To @Model.Name ?</p>
+
+        <form class="message"  action="/sendMessage" style="width:350px; margin:auto;margin-top:10px;text-align:center;" method="POST">
+            <input type="hidden" value="@Model.DogId" name="reciever">
+            <input type="hidden" class="message" name="MessageContent" value=";)"><br>
+            <button style="background-color:#FB8C00;color:white;" class="tablinks" type="submit">Send</button>
+        </form>
+        <form class="" action="#" style="display:inline-block;margin:auto;width:100px;">
+           <button style="background-color: whitesmoke;margin:auto;display: inline-block;width:88px;" class="tablinks" type="submit">Back</button>
+        </form>
+
+    </div>
+    
+    </a>
+
     @Html.Partial("ProfileUpdate", (DogProfileViewModel)@EditProfile)
 
 <div id="PhotoModal" class="modal">
