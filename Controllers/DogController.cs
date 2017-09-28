@@ -49,21 +49,54 @@ namespace WagDog.Controllers
         {
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");
             Dog CurrentDog = _context.Dogs.Include(d => d.Preferences).ThenInclude(p => p.Filter).SingleOrDefault(dog => dog.DogId == dogId);
-            List<Filter> SearchFilters = new List<Filter>();
-            List<Dog> Dogs = _context.Dogs.Where(d => d.DogId != dogId).ToList();
-
-            // if(TempData["SearchFilters"] != null){
-            //     SearchFilters = TempData["SearchFilters"] as List<Filter>;
-            // }
-            // foreach (var filter in SearchFilters){
-            //     Expression<Func<T, bool>> whereClause = filter.LinqFilter;
-            //         Dogs = from dog in Dogs
-            //                 where filter.LinqFilter;
-            //     }
-            // }
-
+            IEnumerable<Dog> Dogs = _context.Dogs.Where(d => d.DogId != dogId).ToList();
+            List<Filter> SearchFilters = HttpContext.Session.GetObjectFromJson<List<Filter>>("SearchFilters");
+            if(SearchFilters != null){
+                foreach (var filter in SearchFilters){
+                    if (filter.Category == "Age"){
+                        if (filter.LinqFilter == "Puppy"){
+                            Dogs = from dog in Dogs
+                            where dog.Age <= 3
+                            select dog;
+                        }
+                        if (filter.LinqFilter == "Adult"){
+                            Dogs = from dog in Dogs
+                            where dog.Age > 3 && dog.Age < 10
+                            select dog;
+                        }
+                        if (filter.LinqFilter == "Senior"){
+                            Dogs = from dog in Dogs
+                            where dog.Age >= 10
+                            select dog;
+                        }
+                    } else if (filter.Category == "Breed"){
+                        Dogs = from dog in Dogs
+                            where dog.Breed == filter.UserFilter
+                            select dog;
+                    } else if (filter.Category == "BodyType"){
+                        Dogs = from dog in Dogs
+                            where dog.BodyType == filter.UserFilter
+                            select dog;
+                    } else if (filter.Category == "HighestEducation"){
+                        Dogs = from dog in Dogs
+                            where dog.HighestEducation == filter.UserFilter
+                            select dog;
+                    } else if (filter.Category == "Barking"){
+                        Dogs = from dog in Dogs
+                            where dog.Barking == filter.UserFilter
+                            select dog;
+                    } else if (filter.Category == "Accidents"){
+                        Dogs = from dog in Dogs
+                            where dog.Accidents == filter.UserFilter
+                            select dog;
+                    }
+                }   
+                HttpContext.Session.SetObjectAsJson("SearchFilters", null);
+            }
+            foreach (var dog in Dogs){
+                    dog.MatchPercent = CalculateMatch(dog, CurrentDog);
+                }
             SearchWrapper SearchResults = new SearchWrapper(Dogs, SearchFilters);
-            
           return View(SearchResults);  
         } 
 
@@ -115,7 +148,7 @@ namespace WagDog.Controllers
                         AllSearchFilters.Add(barkFilter);
                     }
                 }
-            TempData["SearchFilters"] = AllSearchFilters;
+            HttpContext.Session.SetObjectAsJson("SearchFilters", AllSearchFilters);
             return RedirectToAction("Search");
         }
 
@@ -271,9 +304,9 @@ namespace WagDog.Controllers
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");
             Dog CurrentDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == dogId);
             List<Message> Messages = _context.Messages.Include(m=>m.Sender).OrderByDescending(t => t.created_at).Where(message => message.ReceiverId == dogId).ToList();
-            List<Message> Sent = _context.Messages.Include(m=>m.Receiver).OrderByDescending(t => t.created_at).Where(message => message.SenderId == dogId).ToList();
+            // List<Message> Sent = _context.Messages.Include(m=>m.Receiver).OrderByDescending(t => t.created_at).Where(message => message.SenderId == dogId).ToList();
             ViewBag.Messages=Messages;
-            ViewBag.Sent=Sent;
+            // ViewBag.Sent=Sent;
             return View("Messages");
         }
 
@@ -441,6 +474,10 @@ namespace WagDog.Controllers
             }
             return RedirectToAction("Messages");
     
+        }
+
+        public double CalculateMatch(Dog dMatch, Dog dLoggedIn){
+            return dMatch.DogId + dLoggedIn.DogId;
         }
     }
 }
