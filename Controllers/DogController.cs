@@ -8,6 +8,7 @@ using WagDog.Models;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
+using System.Linq.Expressions;
 
 namespace WagDog.Controllers
 {
@@ -47,44 +48,76 @@ namespace WagDog.Controllers
         public IActionResult Search()
         {
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");
-            Dog CurrentDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == dogId);
-            // get PREFLIST************************************************
-            List<string> PrefList = new List<string>();
-            // delete above
-            var length =PrefList.Count();
+            Dog CurrentDog = _context.Dogs.Include(d => d.Preferences).ThenInclude(p => p.Filter).SingleOrDefault(dog => dog.DogId == dogId);
+            List<Filter> SearchFilters = new List<Filter>();
+            List<Dog> Dogs = _context.Dogs.Where(d => d.DogId != dogId).ToList();
 
-            if (length == 0){
-                IEnumerable<Dog> Dogs = _context.Dogs.ToList();
-                ViewBag.Dogs=_context.Dogs.ToList();
-                return View("Search");
-            } if (length == 1){
-                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0]).ToList();
-                ViewBag.Dogs = _context.Dogs.ToList();
-                return View("Search");
-            } if (length == 2){
-                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1]).ToList();
-                ViewBag.Dogs = _context.Dogs.ToList();
-                return View("Search");
-            } if (length == 3){
-                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1] && x.PrefList == PrefList[2]).ToList();
-                ViewBag.Dogs = _context.Dogs.ToList();
-                return View("Search");
-            } if (length == 4){
-                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1] && x.PrefList == PrefList[2] && x.PrefList == PrefList[3]).ToList();
-                ViewBag.Dogs = _context.Dogs.ToList();
-                return View("Search");
-            } if (length == 5){
-                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1] && x.PrefList == PrefList[2] && x.PrefList == PrefList[3] && x.PrefList == PrefList[4]).ToList();
-                ViewBag.Dogs = _context.Dogs.ToList();
-                return View("Search");
-            } if (length == 6){
-                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1] && x.PrefList == PrefList[2] && x.PrefList == PrefList[3] && x.PrefList == PrefList[4] && x.PrefList == PrefList[5]).ToList();
-                ViewBag.Dogs = _context.Dogs.ToList();
-                return View("Search");
-            }
-            // WHERE TO RETURN TO ********************************************************************
-          return View("Index");  
+            // if(TempData["SearchFilters"] != null){
+            //     SearchFilters = TempData["SearchFilters"] as List<Filter>;
+            // }
+            // foreach (var filter in SearchFilters){
+            //     Expression<Func<T, bool>> whereClause = filter.LinqFilter;
+            //         Dogs = from dog in Dogs
+            //                 where filter.LinqFilter;
+            //     }
+            // }
+
+            SearchWrapper SearchResults = new SearchWrapper(Dogs, SearchFilters);
+            
+          return View(SearchResults);  
         } 
+
+        [HttpPost]
+        [Route("ProcessSearch")]
+        public IActionResult ProcessSearch(int PrefAge, int PrefBreed, int PrefBodyType, int PrefEducation, int PrefAccidents, int PrefBarking){
+            int? dogId = HttpContext.Session.GetInt32("CurrentDog");
+            Dog CurrentDog = _context.Dogs.Include(d=> d.Preferences).ThenInclude(p => p.Filter).SingleOrDefault(dog => dog.DogId == dogId);
+            List<Filter> AllSearchFilters = new List<Filter>();
+            if (PrefAge > 0)
+                { 
+                    Filter ageFilter = _context.Filters.SingleOrDefault(f => f.FilterId == PrefAge);
+                    if(ageFilter != null){
+                        AllSearchFilters.Add(ageFilter);
+                    }
+                }
+            if (PrefBreed > 0)
+                { 
+                    Filter breedFilter = _context.Filters.SingleOrDefault(f => f.FilterId == PrefBreed);
+                    if(breedFilter != null){
+                        AllSearchFilters.Add(breedFilter);
+                    }
+                }
+            if (PrefBodyType > 0)
+                { 
+                    Filter bodyFilter = _context.Filters.SingleOrDefault(f => f.FilterId == PrefBodyType);
+                    if(bodyFilter != null){
+                        AllSearchFilters.Add(bodyFilter);
+                    }
+                }
+            if (PrefEducation > 0)
+                { 
+                    Filter educFilter = _context.Filters.SingleOrDefault(f => f.FilterId == PrefEducation);
+                    if(educFilter != null){
+                        AllSearchFilters.Add(educFilter);
+                    }
+                }
+            if (PrefAccidents > 0)
+                { 
+                    Filter accidentFilter = _context.Filters.SingleOrDefault(f => f.FilterId == PrefAccidents);
+                    if(accidentFilter != null){
+                        AllSearchFilters.Add(accidentFilter);
+                    }
+                }
+            if (PrefBarking > 0)
+                { 
+                    Filter barkFilter = _context.Filters.SingleOrDefault(f => f.FilterId == PrefBarking);
+                    if(barkFilter != null){
+                        AllSearchFilters.Add(barkFilter);
+                    }
+                }
+            TempData["SearchFilters"] = AllSearchFilters;
+            return RedirectToAction("Search");
+        }
 
         [HttpGet]
         [Route("UserProfile")]
