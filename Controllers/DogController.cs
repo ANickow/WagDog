@@ -52,7 +52,7 @@ namespace WagDog.Controllers
                 return RedirectToAction("index");
             }
             Dog CurrentDog = _context.Dogs.Include(d => d.Preferences).ThenInclude(p => p.Filter).SingleOrDefault(dog => dog.DogId == dogId);
-            IEnumerable<Dog> Dogs = _context.Dogs.Where(d => d.DogId != dogId).ToList();
+            IEnumerable<Dog> Dogs = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).Where(d => d.DogId != dogId).ToList();
             List<Filter> SearchFilters = HttpContext.Session.GetObjectFromJson<List<Filter>>("SearchFilters");
             if(SearchFilters != null){
                 foreach (var filter in SearchFilters){
@@ -496,7 +496,114 @@ namespace WagDog.Controllers
         }
 
         public double CalculateMatch(Dog dMatch, Dog dLoggedIn){
-            return dMatch.DogId + dLoggedIn.DogId;
+            // Calculate Total Possible Points
+            double possiblePoints = 1.0;
+            double matchPoints = 0.0;
+            if (dLoggedIn.Age > 0){
+                possiblePoints +=1.0;
+                if (Math.Abs(dMatch.Age - dLoggedIn.Age)<2){
+                    matchPoints += 1.0;
+                }
+            }
+            if (dLoggedIn.Breed != null){
+                possiblePoints +=1.0;
+                if (dMatch.Breed == dLoggedIn.Breed){
+                    matchPoints += 1.0;
+                }
+            }
+            if (dLoggedIn.BodyType != null){
+                possiblePoints +=1.0;
+                if (dMatch.BodyType == dLoggedIn.BodyType){
+                    matchPoints += 1.0;
+                }
+            }
+            if (dLoggedIn.HighestEducation != null){
+                possiblePoints +=1;
+                if (dMatch.HighestEducation == dLoggedIn.HighestEducation){
+                    matchPoints += 1;
+                }
+            }
+            if (dLoggedIn.Barking != null){
+                possiblePoints +=1.0;
+                if (dMatch.Barking == dLoggedIn.Barking){
+                    matchPoints += 1.0;
+                }
+            }
+            if (dLoggedIn.Accidents != null){
+                possiblePoints +=1.0;
+                if (dMatch.Accidents == dLoggedIn.Accidents){
+                    matchPoints += 1.0;
+                }
+            }
+            if (dLoggedIn.Interests != null){
+                possiblePoints += 1.0;
+                foreach (var DLIinterest in dLoggedIn.Interests){
+                    if (dMatch.Interests.Where(i => i.InterestId == DLIinterest.InterestId).ToList().Count != 0){
+                        matchPoints += 1.0;
+                    }
+                }
+            }
+            if (dLoggedIn.Humans != null){
+                possiblePoints += 1.0;
+                foreach (var DLIhuman in dLoggedIn.Humans){
+                    if (dMatch.Humans.Where(h => h.HumanId == DLIhuman.HumanId).ToList().Count != 0){
+                        matchPoints += 1.0;
+                    }
+                }
+            }
+            if (dLoggedIn.Animals != null){
+                possiblePoints += 1.0;
+                foreach (var DLIanimal in dLoggedIn.Animals){
+                    if (dMatch.Animals.Where(a => a.AnimalId == DLIanimal.AnimalId).ToList().Count != 0){
+                        matchPoints += 1.0;
+                    }
+                }
+            }
+            if (dLoggedIn.Preferences != null){
+                possiblePoints += dLoggedIn.Preferences.Count();
+                foreach (var preference in dLoggedIn.Preferences){
+                    Filter filter = preference.Filter;
+                    if (filter.Category == "Age"){
+                        if (filter.LinqFilter == "Puppy"){
+                            if(dMatch.Age <= 3){
+                                matchPoints += 1.0;
+                            }
+                        }
+                        if (filter.LinqFilter == "Adult"){
+                            if(dMatch.Age > 3 && dMatch.Age <10){
+                                matchPoints += 1.0;
+                            }
+                        }
+                        if (filter.LinqFilter == "Senior"){
+                            if(dMatch.Age >= 10){
+                                matchPoints += 1.0;
+                            }
+                        }
+                    } else if (filter.Category == "Breed"){
+                            if(dMatch.Breed == filter.UserFilter){
+                                matchPoints += 1.0;
+                            }
+                    } else if (filter.Category == "BodyType"){
+                            if(dMatch.BodyType == filter.UserFilter){
+                                matchPoints += 1.0;
+                            }
+                    } else if (filter.Category == "HighestEducation"){
+                            if(dMatch.HighestEducation == filter.UserFilter){
+                                matchPoints += 1.0;
+                            }
+                    } else if (filter.Category == "Barking"){
+                            if(dMatch.Barking == filter.UserFilter){
+                                matchPoints += 1.0;
+                            }
+                    } else if (filter.Category == "Accidents"){
+                            if(dMatch.Accidents == filter.UserFilter){
+                                matchPoints += 1.0;
+                            }
+                    }
+                }   
+            }
+            double matchRatio = matchPoints/(possiblePoints/3.0);
+            return matchRatio;
         }
     }
 }
