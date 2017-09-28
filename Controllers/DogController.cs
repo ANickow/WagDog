@@ -188,6 +188,15 @@ namespace WagDog.Controllers
         }
 
         [HttpGet]
+        [Route("Messages")]
+        public IActionResult Messages(){
+            int? dogId = HttpContext.Session.GetInt32("CurrentDog");
+            // Dog CurrentDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == dogId);
+            // return View(CurrentDog);
+            return View("Messages");
+        }
+
+        [HttpGet]
         [Route("Dashboard")]
         public IActionResult Dashboard(){
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");
@@ -224,7 +233,7 @@ namespace WagDog.Controllers
         }
 // MESSAGES ROUTE**********************************************************************
         [HttpPost]
-        [Route("PostMessage")]
+        [Route("sendMessage")]
         public IActionResult PostMessage(int Id, MessageViewModel Message)
         {
 

@@ -50,7 +50,7 @@
             </ul>
 
             <ul style="float:right;">
-                <li><a href="#news">Messages</a></li>
+                <li><a href="/Messages">Messages</a></li>
                 <li class="dropdown">
                     <a href="javascript:void(0)" class="dropbtn">My Account</a>
                     <div class="dropdown-content">
@@ -68,14 +68,14 @@
         <div class="profileContent">
             <div class="profileTile">
                 <div class="leftPanelProfile">
-                    <img class="fullProfile" src=@Model.PhotoPath>
+                    <img class="fullProfile" src="/img/frenchie.jpg">
                     @if(@Editable){
                         <button>Edit Profile</button>
                     }else{
                         <ul class="icons">
-                            <li class="icons"><img class="icon" style="height:45px;" src="img/email.png"></li>
-                            <li class="icons"><img class="icon" style="height:37px;" src="img/msg.png"></li>
-                            <li class="icons"><img class="icon" style="height:40px;" src="img/wink.png"></li>
+                            <li class="icons"><a href="mailto:@Model.Email"><img class="icon" style="height:45px;" src="/img/email.png"></a></li>
+                            <li class="icons"><a href="#newMessage"><img class="icon" style="height:37px;" src="/img/msg.png"></a></li>
+                            <li class="icons"><img class="icon" style="height:40px;" src="/img/wink.png"></li>
                         </ul>
                     }
                 </div>
@@ -147,6 +147,24 @@
             </div>
         </div>
     </div>
+
+
+    <a class="lightbox" id="newMessage">
+    
+    <div class="messageBox" style="vertical-align: top;">
+        <p style="display:inline-block;">Send To: @Model.Name</p>
+        <form class="close" action="sendMessage" style="display:inline-block;">
+            <button style="background-color: whitesmoke;" class="tablinks" type="submit">close</button>
+        </form>
+
+        <form class="message" action="sendMessage" style="width:350px; margin:auto;margin-top:10px;">
+            <input type="text" class="message" style="background-color:white;width:350px;height:120px;"><br>
+            <button style="background-color:#FB8C00;color:white;" class="tablinks" type="submit">submit</button>
+        </form>
+
+    </div>
+    
+    </a>
 
 </body>
 
