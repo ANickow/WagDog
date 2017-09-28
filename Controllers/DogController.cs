@@ -48,10 +48,43 @@ namespace WagDog.Controllers
         {
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");
             Dog CurrentDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == dogId);
-            IEnumerable<Dog> Dogs = _context.Dogs.ToList();
-            ViewBag.Dogs=_context.Dogs.ToList();
-            return View();
-        }
+            // get PREFLIST************************************************
+            List<string> PrefList = new List<string>();
+            // delete above
+            var length =PrefList.Count();
+
+            if (length == 0){
+                IEnumerable<Dog> Dogs = _context.Dogs.ToList();
+                ViewBag.Dogs=_context.Dogs.ToList();
+                return View("Search");
+            } if (length == 1){
+                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0]).ToList();
+                ViewBag.Dogs = _context.Dogs.ToList();
+                return View("Search");
+            } if (length == 2){
+                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1]).ToList();
+                ViewBag.Dogs = _context.Dogs.ToList();
+                return View("Search");
+            } if (length == 3){
+                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1] && x.PrefList == PrefList[2]).ToList();
+                ViewBag.Dogs = _context.Dogs.ToList();
+                return View("Search");
+            } if (length == 4){
+                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1] && x.PrefList == PrefList[2] && x.PrefList == PrefList[3]).ToList();
+                ViewBag.Dogs = _context.Dogs.ToList();
+                return View("Search");
+            } if (length == 5){
+                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1] && x.PrefList == PrefList[2] && x.PrefList == PrefList[3] && x.PrefList == PrefList[4]).ToList();
+                ViewBag.Dogs = _context.Dogs.ToList();
+                return View("Search");
+            } if (length == 6){
+                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1] && x.PrefList == PrefList[2] && x.PrefList == PrefList[3] && x.PrefList == PrefList[4] && x.PrefList == PrefList[5]).ToList();
+                ViewBag.Dogs = _context.Dogs.ToList();
+                return View("Search");
+            }
+            // WHERE TO RETURN TO ********************************************************************
+          return View("Index");  
+        } 
 
         [HttpGet]
         [Route("UserProfile")]
