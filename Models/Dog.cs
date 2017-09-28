@@ -22,6 +22,8 @@ namespace WagDog.Models
         public DateTime created_at { get; set; }
         public DateTime updated_at { get; set; }
         
+        [NotMapped]
+        public double MatchPercent { get; set; }
         
         public List<DogInterest> Interests { get; set; }
         public List<Family> Humans { get; set; }
