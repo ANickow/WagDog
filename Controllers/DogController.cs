@@ -198,6 +198,8 @@ namespace WagDog.Controllers
         public IActionResult Logout(){
             HttpContext.Session.Clear();
             return RedirectToAction("Index");
+        }
+        
         [Route("Messages")]
         public IActionResult Messages(){
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");

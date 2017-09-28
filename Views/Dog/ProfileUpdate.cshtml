@@ -199,9 +199,9 @@
                                     @:<tr>
                                 }
                                 if(@Model.Interests.IndexOf(interestcounter+1) != -1){
-                                    @:<td><input type="checkbox" name="Interests" value=@interestcounter+1) checked><p>@interest</p></td>
+                                    @:<td><input type="checkbox" name="Interests" value=@interestcounter checked><p>@interest</p></td>
                                 }else{
-                                    @:<td><input type="checkbox" name="Interests" value=(@interestcounter+1)><p>@interest</p></td>
+                                    @:<td><input type="checkbox" name="Interests" value=@interestcounter><p>@interest</p></td>
                                 }
                                 if(interestcounter % 4 == 0 && interestcounter !=4){
                                     @:</tr>
