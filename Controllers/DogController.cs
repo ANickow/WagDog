@@ -48,10 +48,43 @@ namespace WagDog.Controllers
         {
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");
             Dog CurrentDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == dogId);
-            IEnumerable<Dog> Dogs = _context.Dogs.ToList();
-            ViewBag.Dogs=_context.Dogs.ToList();
-            return View();
-        }
+            // get PREFLIST************************************************
+            List<string> PrefList = new List<string>();
+            // delete above
+            var length =PrefList.Count();
+
+            if (length == 0){
+                IEnumerable<Dog> Dogs = _context.Dogs.ToList();
+                ViewBag.Dogs=_context.Dogs.ToList();
+                return View("Search");
+            } if (length == 1){
+                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0]).ToList();
+                ViewBag.Dogs = _context.Dogs.ToList();
+                return View("Search");
+            } if (length == 2){
+                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1]).ToList();
+                ViewBag.Dogs = _context.Dogs.ToList();
+                return View("Search");
+            } if (length == 3){
+                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1] && x.PrefList == PrefList[2]).ToList();
+                ViewBag.Dogs = _context.Dogs.ToList();
+                return View("Search");
+            } if (length == 4){
+                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1] && x.PrefList == PrefList[2] && x.PrefList == PrefList[3]).ToList();
+                ViewBag.Dogs = _context.Dogs.ToList();
+                return View("Search");
+            } if (length == 5){
+                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1] && x.PrefList == PrefList[2] && x.PrefList == PrefList[3] && x.PrefList == PrefList[4]).ToList();
+                ViewBag.Dogs = _context.Dogs.ToList();
+                return View("Search");
+            } if (length == 6){
+                IEnumerable<Dog> Dogs = _context.Dogs.Where(x => x.PrefList == PrefList[0] && x.PrefList == PrefList[1] && x.PrefList == PrefList[2] && x.PrefList == PrefList[3] && x.PrefList == PrefList[4] && x.PrefList == PrefList[5]).ToList();
+                ViewBag.Dogs = _context.Dogs.ToList();
+                return View("Search");
+            }
+            // WHERE TO RETURN TO ********************************************************************
+          return View("Index");  
+        } 
 
         [HttpGet]
         [Route("UserProfile")]
@@ -194,6 +227,12 @@ namespace WagDog.Controllers
         }
 
         [HttpGet]
+        [Route("Logout")]
+        public IActionResult Logout(){
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index");
+        }
+        
         [Route("Messages")]
         public IActionResult Messages(){
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");
@@ -240,6 +279,74 @@ namespace WagDog.Controllers
             _context.SaveChanges();
             return RedirectToAction("Profile", new{ DogId = dogId});
         }
+
+        [HttpPost]
+        [Route("SetPreferences")]
+        public IActionResult SetPreferences(int PrefAge, int PrefBreed, int PrefBodyType, int PrefEducation, int PrefAccidents, int PrefBarking){
+            int? dogId = HttpContext.Session.GetInt32("CurrentDog");
+            Dog CurrentDog = _context.Dogs.Include(d=> d.Preferences).ThenInclude(p => p.Filter).SingleOrDefault(dog => dog.DogId == dogId);
+            List<Preference> AllNewPreferences = new List<Preference>();
+            if (PrefAge > 0)
+                { 
+                    Preference currPrefAge = CurrentDog.Preferences.SingleOrDefault(p => p.Filter.Category == "Age");
+                    if(currPrefAge != null){_context.Preferences.Remove(currPrefAge);}
+                    Preference newPreference = new Preference();
+                    newPreference.DogId = CurrentDog.DogId;
+                    newPreference.FilterId = PrefAge;
+                    AllNewPreferences.Add(newPreference);
+                }
+            if (PrefBreed > 0)
+                { 
+                    Preference currPrefBreed = CurrentDog.Preferences.SingleOrDefault(p => p.Filter.Category == "Breed");
+                    if(currPrefBreed != null){_context.Preferences.Remove(currPrefBreed);}
+                    Preference newPreference = new Preference();
+                    newPreference.DogId = CurrentDog.DogId;
+                    newPreference.FilterId = PrefBreed;
+                    AllNewPreferences.Add(newPreference);
+                }
+            if (PrefBodyType > 0)
+                { 
+                    Preference currPrefBodyType = CurrentDog.Preferences.SingleOrDefault(p => p.Filter.Category == "BodyType");
+                    if(currPrefBodyType != null){_context.Preferences.Remove(currPrefBodyType);}
+                    Preference newPreference = new Preference();
+                    newPreference.DogId = CurrentDog.DogId;
+                    newPreference.FilterId = PrefBodyType;
+                    AllNewPreferences.Add(newPreference);
+                }
+            if (PrefEducation > 0)
+                { 
+                    Preference currPrefEducation = CurrentDog.Preferences.SingleOrDefault(p => p.Filter.Category == "Education");
+                    if(currPrefEducation != null){_context.Preferences.Remove(currPrefEducation);}
+                    Preference newPreference = new Preference();
+                    newPreference.DogId = CurrentDog.DogId;
+                    newPreference.FilterId = PrefEducation;
+                    AllNewPreferences.Add(newPreference);
+                }
+            if (PrefAccidents > 0)
+                { 
+                    Preference currPrefAccidents = CurrentDog.Preferences.SingleOrDefault(p => p.Filter.Category == "Accidents");
+                    if(currPrefAccidents != null){_context.Preferences.Remove(currPrefAccidents);}
+                    Preference newPreference = new Preference();
+                    newPreference.DogId = CurrentDog.DogId;
+                    newPreference.FilterId = PrefAccidents;
+                    AllNewPreferences.Add(newPreference);
+                }
+            if (PrefBarking > 0)
+                { 
+                    Preference currPrefBarking = CurrentDog.Preferences.SingleOrDefault(p => p.Filter.Category == "Barking");
+                    if(currPrefBarking != null){_context.Preferences.Remove(currPrefBarking);}
+                    Preference newPreference = new Preference();
+                    newPreference.DogId = CurrentDog.DogId;
+                    newPreference.FilterId = PrefBarking;
+                    AllNewPreferences.Add(newPreference);
+                }
+            foreach (Preference preference in AllNewPreferences){
+                _context.Add(preference);
+            }
+            _context.SaveChanges();   
+            return RedirectToAction("Profile", new{ DogId = dogId});
+        }
+
 // MESSAGES ROUTE**********************************************************************
         [HttpPost]
         [Route("sendMessage")]
