@@ -17,27 +17,7 @@
             <h1>Who's a Good Dog?</h1>
         </div>
 
-        <div class="navigation">
-            <ul>
-                <li><a href="/Dashboard">Home</a></li>
-                <li><a href="/Search">Search</a></li>
-                <li><a href="#news">Matches</a></li>
-            </ul>
-
-            <ul style="float:right;">
-                <li><a href="/Messages">Messages</a></li>
-                <li class="dropdown">
-                    <a href="javascript:void(0)" class="dropbtn">My Account</a>
-                    <div class="dropdown-content">
-                        <a href="UserProfile">My Profile</a>
-                        <a href="#">Logout</a>
-                        <a href="#">Preferences</a>
-                        <a href="#">Settings</a>
-                    </div>
-                </li>
-
-            </ul>
-        </div>
+        @Html.Partial("NavBar")
 
         <br>
         <div class="profileContent">

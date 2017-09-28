@@ -97,7 +97,8 @@ namespace WagDog.Controllers
                     dog.MatchPercent = CalculateMatch(dog, CurrentDog);
                 }
             SearchWrapper SearchResults = new SearchWrapper(Dogs, SearchFilters);
-          return View(SearchResults);  
+            ViewBag.currDogId = dogId;
+            return View(SearchResults);  
         } 
 
         [HttpPost]
@@ -304,9 +305,10 @@ namespace WagDog.Controllers
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");
             Dog CurrentDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == dogId);
             List<Message> Messages = _context.Messages.Include(m=>m.Sender).OrderByDescending(t => t.created_at).Where(message => message.ReceiverId == dogId).ToList();
-            // List<Message> Sent = _context.Messages.Include(m=>m.Receiver).OrderByDescending(t => t.created_at).Where(message => message.SenderId == dogId).ToList();
+            List<Message> Sent = _context.Messages.Include(m=>m.Receiver).OrderByDescending(t => t.created_at).Where(message => message.SenderId == dogId).ToList();
             ViewBag.Messages=Messages;
-            // ViewBag.Sent=Sent;
+            ViewBag.Sent=Sent;
+            ViewBag.currDogId = dogId;
             return View("Messages");
         }
 
@@ -325,6 +327,7 @@ namespace WagDog.Controllers
             int? currDogId = HttpContext.Session.GetInt32("CurrentDog");
             ViewBag.currDogId = (int)currDogId;
             Dog ProfileDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == DogId);
+            ViewBag.currDogId = currDogId;
             return View(ProfileDog);
         }
 
