@@ -198,6 +198,12 @@ namespace WagDog.Controllers
         public IActionResult Logout(){
             HttpContext.Session.Clear();
             return RedirectToAction("Index");
+        [Route("Messages")]
+        public IActionResult Messages(){
+            int? dogId = HttpContext.Session.GetInt32("CurrentDog");
+            // Dog CurrentDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == dogId);
+            // return View(CurrentDog);
+            return View("Messages");
         }
 
         [HttpGet]
@@ -305,7 +311,7 @@ namespace WagDog.Controllers
 
 // MESSAGES ROUTE**********************************************************************
         [HttpPost]
-        [Route("PostMessage")]
+        [Route("sendMessage")]
         public IActionResult PostMessage(int Id, MessageViewModel Message)
         {
 
