@@ -338,6 +338,9 @@ namespace WagDog.Controllers
         [Route("Profile/{DogId}")]
         public IActionResult Profile(int DogId){
             int? currDogId = HttpContext.Session.GetInt32("CurrentDog");
+            if (currDogId == null){
+                return RedirectToAction("index");;
+            }
             ViewBag.currDogId = (int)currDogId;
             Dog ProfileDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == DogId);
             ViewBag.currDogId = currDogId;
