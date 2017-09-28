@@ -197,8 +197,11 @@ namespace WagDog.Controllers
         [Route("Messages")]
         public IActionResult Messages(){
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");
-            // Dog CurrentDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == dogId);
-            // return View(CurrentDog);
+            Dog CurrentDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == dogId);
+            List<Message> Messages = _context.Messages.Include(m=>m.Sender).OrderByDescending(t => t.created_at).Where(message => message.ReceiverId == dogId).ToList();
+            List<Message> Sent = _context.Messages.Include(m=>m.Receiver).OrderByDescending(t => t.created_at).Where(message => message.SenderId == dogId).ToList();
+            ViewBag.Messages=Messages;
+            ViewBag.Sent=Sent;
             return View("Messages");
         }
 
@@ -240,13 +243,12 @@ namespace WagDog.Controllers
 // MESSAGES ROUTE**********************************************************************
         [HttpPost]
         [Route("sendMessage")]
-        public IActionResult PostMessage(int Id, MessageViewModel Message)
+        public IActionResult PostMessage(int reciever, Message Message)
         {
 
             int? loggedInId = HttpContext.Session.GetInt32("CurrentDog");
             if (loggedInId == null){
                 // WHERE DO YOU WANT TO GO IF NOT LOGGED IN????**********************
-                return RedirectToAction("index");;
             }
 
             if (ModelState.IsValid)
@@ -257,25 +259,48 @@ namespace WagDog.Controllers
                 {
                     SenderId = CurrentDog.DogId,
                     MessageContent = Message.MessageContent,
-                    ReceiverId = Id,
+                    ReceiverId = reciever,
                     created_at = DateTime.Now,
                     updated_at = DateTime.Now
-
                 };
+
                 _context.Messages.Add(NewMessage);
                 _context.SaveChanges();
 
-
-
-                // REDIRECT REDIRECT REDIRECT 
-                HttpContext.Session.SetInt32("CurrentDog", CurrentDog.DogId);
-                ViewBag.CurrentDog = CurrentDog;
-                return View("LANDING_PAGE");
             }
-            else
+            return RedirectToAction("Profile", new { DogId = (int)reciever});
+    
+        }
+
+        [HttpPost]
+        [Route("replyMessage")]
+        public IActionResult replyMessage(int reciever, Message Message)
+        {
+
+            int? loggedInId = HttpContext.Session.GetInt32("CurrentDog");
+            if (loggedInId == null){
+                // WHERE DO YOU WANT TO GO IF NOT LOGGED IN????**********************
+            }
+
+            if (ModelState.IsValid)
             {
-                return View("index", Message);
+                Dog CurrentDog = _context.Dogs.Where(dogs => dogs.DogId == loggedInId).SingleOrDefault();
+                
+                Message NewMessage = new Message
+                {
+                    SenderId = CurrentDog.DogId,
+                    MessageContent = Message.MessageContent,
+                    ReceiverId = reciever,
+                    created_at = DateTime.Now,
+                    updated_at = DateTime.Now
+                };
+
+                _context.Messages.Add(NewMessage);
+                _context.SaveChanges();
+
             }
+            return RedirectToAction("Messages");
+    
         }
     }
 }
