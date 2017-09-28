@@ -69,9 +69,13 @@
         <div class="profileContent">
             <div class="profileTile">
                 <div class="leftPanelProfile">
-                    @if(@Model.PhotoPath == null){
+                    @if(@Model.PhotoPath == null && @Editable){
+                        <img class="fullProfile" id="openPhoto" src="/img/defaultDog.jpg">
+                    }
+                    @if(@Model.PhotoPath == null && !@Editable){
                         <img class="fullProfile" src="/img/defaultDog.jpg">
-                    }else{
+                        }
+                    @if(@Model.PhotoPath != null){
                         <img class="fullProfile" src=@Model.PhotoPath>
                     }
                     @if(@Editable){
@@ -155,6 +159,22 @@
 
     @Html.Partial("ProfileUpdate", (DogProfileViewModel)@EditProfile)
 
+<div id="PhotoModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="close" id="closePhoto">&times;</span>
+            <h2>Show everyone how heckin cute you are!</h2>
+        </div>
+        <div class="modal-body">
+                <p>Select a photo for upload</p>
+                <form method="post" enctype="multipart/form-data" asp-controller="Dog" asp-action="PhotoUpload">
+                    <input type="file" name="Photo" accept="image/*" />
+                    <button>Submit</button>
+                </form>
+        </div>
+    </div>
+</div>
+
 </body>
 
 </html>
@@ -176,9 +196,28 @@
         openCategory('Age');
     }
 
+
+    var photo = document.getElementById('PhotoModal');
+    var openPhoto = document.getElementById("openPhoto");
+    var closePhoto = document.getElementById("closePhoto");
+
+    openPhoto.onclick = function() {
+        photo.style.display = "block";
+    }
+
+    closePhoto.onclick = function() {
+        photo.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
     $(document).ready(function(){
 
-        $('form').submit(function(event){
+        $('#dashboard').submit(function(event){
             event.preventDefault();
         });
 

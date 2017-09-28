@@ -226,7 +226,7 @@ namespace WagDog.Controllers
                 await Photo.CopyToAsync(fileStream);
             }
             _context.SaveChanges();
-            return RedirectToAction("Dashboard");
+            return RedirectToAction("Profile", new{ DogId = dogId});
         }
 // MESSAGES ROUTE**********************************************************************
         [HttpPost]
