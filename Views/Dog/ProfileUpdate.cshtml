@@ -228,6 +228,7 @@
 
 <script>
     function updateProfile(){
+        console.log("PRE REGISTER SCRIPT******************************************")
         var ProfileData = $("#Profile").serializeArray();
         console.log(ProfileData);
         var DogProfile = {};
@@ -246,6 +247,7 @@
             }
         }
         $.post("../UpdateProfile", DogProfile, function(response){
+            console.log("PRE REGISTER SCRIPT******************************************22222222")
             window.location.replace("../Dashboard")
         });
     }
