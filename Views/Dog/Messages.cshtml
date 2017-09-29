@@ -52,6 +52,7 @@
         <h3>Inbox</h3>
         
         @foreach(var message in @ViewBag.Messages){
+            <hr>
             <a href="#newMessage">
             <div>
             <p> From: @message.Sender.Name </p>
@@ -78,17 +79,17 @@
 
                 </div>
             </a>
-            <hr>
+            
         }
         </div>
 
         <div id="Paris" class="tabcontent">
         <h3>Sent</h3>
         @foreach(var message in @ViewBag.Sent){
-            <p> To: @message.Receiver.Name </p>
+            <hr>
+            <p> <a href="Profile/@message.Receiver.DogId">To: @message.Receiver.Name</a></p>
             @message.MessageContent
             <p style="color:#BDBDBD;font-size:11px;">@message.created_at</p>
-            <hr>
         }
         </div>
 
