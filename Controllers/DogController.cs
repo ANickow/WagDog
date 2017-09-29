@@ -183,6 +183,7 @@ namespace WagDog.Controllers
                 Dogs = Dogs.Where(d => d.ReverseMatchPercent >= 0.66666 && d.MatchPercent >= 0.66666);
             }
             Dogs = Dogs.OrderByDescending(d => d.MatchPercent);
+            Dogs = RemoveBlockages(Dogs, CurrentDog);
             SearchWrapper SearchResults = new SearchWrapper(Dogs, SearchFilters);
             ViewBag.currDogId = dogId;
             return View("Search", SearchResults);  
