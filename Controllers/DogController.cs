@@ -174,7 +174,9 @@ namespace WagDog.Controllers
                 dog.ReverseMatchPercent = CalculateMatch(CurrentDog, dog);
             }
             List<Filter> SearchFilters = new List<Filter>();
-            if (MatchMethod == "Reverse"){
+            if (MatchMethod == "Match"){
+                Dogs = Dogs.Where(d => d.MatchPercent >= 0.66666);
+            } else if (MatchMethod == "Reverse"){
                 Dogs = Dogs.Where(d => d.ReverseMatchPercent >= 0.66666);
             } else if (MatchMethod == "Mutual"){
                 Dogs = Dogs.Where(d => d.ReverseMatchPercent >= 0.66666 && d.MatchPercent >= 0.66666);
