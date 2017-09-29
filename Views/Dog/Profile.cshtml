@@ -4,7 +4,7 @@
 @{
     DogProfileViewModel EditProfile = new DogProfileViewModel();
     bool Editable = false;
-    if(@ViewBag.currDogId == @Model.DogId){
+    if(@Model.DogId == @ViewBag.currDogId){
         EditProfile.DogId = @Model.DogId;
         EditProfile.Email = @Model.Email;
         EditProfile.Breed = @Model.Breed;
@@ -44,27 +44,7 @@
             <h1>Who's a Good Dog?</h1>
         </div>
 
-        <div class="navigation">
-            <ul>
-                <li><a href="/Dashboard">Home</a></li>
-                <li><a href="/Search">Search</a></li>
-                <li><a href="#news">Matches</a></li>
-            </ul>
-
-            <ul style="float:right;">
-                <li><a href="/Messages">Messages</a></li>
-                <li class="dropdown">
-                    <a href="javascript:void(0)" class="dropbtn">My Account</a>
-                    <div class="dropdown-content">
-                        <a asp-controller="Dog" asp-action="Profile" asp-route-DogId=@ViewBag.currDogId>My Profile</a>
-                        <a asp-controller="Dog" asp-action="Logout">Logout</a>
-                        <a href="#">Preferences</a>
-                        <a href="#">Settings</a>
-                    </div>
-                </li>
-
-            </ul>
-        </div>
+        @Html.Partial("NavBar")
 
         <br>
         <div class="profileContent">
@@ -87,6 +67,7 @@
                             <li class="icons"><a href="mailto:@Model.Email"><img class="icon" style="height:45px;" src="/img/email.png"></a></li>
                             <li class="icons"><a href="#newMessage"><img class="icon" style="height:37px;" src="/img/msg.png"></a></li>
                             <li class="icons"><a href="#newWink"><img class="icon" style="height:40px;" src="/img/wink.png"></a></li>
+                            <li class="icons"><a asp-controller="Dog" asp-action="Block" asp-route-DogId=@Model.DogId><img class="icon" style="height:40px;" src="/img/block.png"></a></li>
                         </ul>
                     }   
                 </div>

@@ -18,27 +18,7 @@
             <h1>Who's a Good Dog?</h1>
         </div>
 
-        <div class="navigation">
-            <ul>
-                <li><a href="/Dashboard">Home</a></li>
-                <li><a href="/Search">Search</a></li>
-                <li><a href="#news">Matches</a></li>
-            </ul>
-
-            <ul style="float:right;">
-                <li><a href="/Messages">Messages</a></li>
-                <li class="dropdown">
-                    <a href="javascript:void(0)" class="dropbtn">My Account</a>
-                    <div class="dropdown-content">
-                        <a href="/Dashboard">My Profile</a>
-                        <a href="#">Logout</a>
-                        <a href="#">Preferences</a>
-                        <a href="#">Settings</a>
-                    </div>
-                </li>
-
-            </ul>
-        </div>
+        @Html.Partial("NavBar")
 
         <br>
         <div style="margin-bottom:50px;" class="profileContent">
@@ -66,7 +46,7 @@
                 </div>
                 <div style="text-align: center;margin-top:10px;">
                 @dog.Name @dog.Age<br>
-                @dog.Breed @dog.MatchPercent %
+                @dog.Breed @((dog.MatchPercent*100).ToString("##")) %
                 </div>
             </a>
             </div>
@@ -86,7 +66,7 @@
                 </div>
                 <div style="text-align: center;margin-top:10px;">
                 @dog.Name @dog.Age<br>
-                @dog.Breed @dog.MatchPercent %
+                @dog.Breed @((dog.MatchPercent*100).ToString("##")) %
                 </div>
             </a>
             </div>
@@ -106,7 +86,7 @@
                 </div>
                 <div style="text-align: center;margin-top:10px;">
                 @dog.Name @dog.Age<br>
-                @dog.Breed @dog.MatchPercent %
+                @dog.Breed @((dog.MatchPercent*100).ToString("##")) %
                 </div>
             </a>
             </div>
@@ -126,7 +106,7 @@
                 </div>
                 <div style="text-align: center;margin-top:10px;">
                 @dog.Name @dog.Age<br>
-                @dog.Breed @dog.MatchPercent %
+                @dog.Breed @((dog.MatchPercent*100).ToString("##")) %
                 </div>
             </a>
             </div>
@@ -146,7 +126,7 @@
                 </div>
                 <div style="text-align: center;margin-top:10px;">
                 @dog.Name @dog.Age<br>
-                @dog.Breed @dog.MatchPercent %
+                @dog.Breed @((dog.MatchPercent*100).ToString("##")) %
                 </div>
             </a>
             </div>
@@ -155,93 +135,94 @@
         
 
         
-<div id="PrefModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <span class="close" id="closePref">&times;</span>
-            <h2>Choose the characteristics you want to see</h2>
-        </div>
-        <div class="modal-body">
-                <form method="post" asp-controller="Dog" asp-action="ProcessSearch">
-                    <table class="prefsTable">
-                        <tr>
-                            <td><p>Age</p></td>
-                            <td><p>Breed</p></td>
-                            <td><p>Body Type</p></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <select name="PrefAge" class="multiselect">
-                                    <option></option>
-                                    <option value="1">Puppy</option>
-                                    <option value="2">Adult</option>
-                                    <option value="3">Senior</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select name="PrefBreed" class="multiselect">
-                                    <option></option>
-                                    <option value="4">Boxer</option>
-                                    <option value="5">Bulldog</option>
-                                    <option value="6">Cocker Spaniel</option>
-                                    <option value="7">German Shepherd</option>
-                                    <option value="8">Golden Retriever</option>
-                                    <option value="9">Labrador</option>
-                                    <option value="10">Pitbull</option>
-                                    <option value="11">Poodle</option>
-                                    <option value="12">Rottweiler</option>
-                                    <option value="13">Yorkie</option>
-                                    <option value="14">Mixed Breed</option>
-                                    <option value="15">Other</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select name="PrefBodyType" class="multiselect">
-                                    <option></option>
-                                    <option value="16">Toy</option>
-                                    <option value="17">Small</option>
-                                    <option value="18">Medium</option>
-                                    <option value="19">Husky</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><p>Education</p></td>
-                            <td><p>Barking</p></td>
-                            <td><p>Accidents</p></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <select name="PrefEducation" class="multiselect">
-                                    <option></option>
-                                    <option value="20">None</option>
-                                    <option value="21">Student</option>
-                                    <option value="22">Obedience School</option>
-                                    <option value="23">Advanced Skills</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select name="PrefBarking" class="multiselect">
-                                    <option></option>
-                                    <option value="24">Never</option>
-                                    <option value="25">Occasionally</option>
-                                    <option value="26">Daily</option>
-                                    <option value="27">Trying to Quit</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select name="PrefAccidents" class="multiselect">
-                                    <option></option>
-                                    <option value="28">Never</option>
-                                    <option value="29">Rarely</option>
-                                    <option value="30">When Ill</option>
-                                    <option value="31">Frequently</option>
-                                </select>
-                            </td>
-                        </tr>
-                    </table>
-                    <button>Submit</button>
-                </form>
+    <div id="PrefModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" id="closePref">&times;</span>
+                <h2>Choose the characteristics you want to see</h2>
+            </div>
+            <div class="modal-body">
+                    <form method="post" asp-controller="Dog" asp-action="ProcessSearch">
+                        <table class="prefsTable">
+                            <tr>
+                                <td><p>Age</p></td>
+                                <td><p>Breed</p></td>
+                                <td><p>Body Type</p></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select name="PrefAge" class="multiselect">
+                                        <option></option>
+                                        <option value="1">Puppy</option>
+                                        <option value="2">Adult</option>
+                                        <option value="3">Senior</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="PrefBreed" class="multiselect">
+                                        <option></option>
+                                        <option value="4">Boxer</option>
+                                        <option value="5">Bulldog</option>
+                                        <option value="6">Cocker Spaniel</option>
+                                        <option value="7">German Shepherd</option>
+                                        <option value="8">Golden Retriever</option>
+                                        <option value="9">Labrador</option>
+                                        <option value="10">Pitbull</option>
+                                        <option value="11">Poodle</option>
+                                        <option value="12">Rottweiler</option>
+                                        <option value="13">Yorkie</option>
+                                        <option value="14">Mixed Breed</option>
+                                        <option value="15">Other</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="PrefBodyType" class="multiselect">
+                                        <option></option>
+                                        <option value="16">Toy</option>
+                                        <option value="17">Small</option>
+                                        <option value="18">Medium</option>
+                                        <option value="19">Husky</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><p>Education</p></td>
+                                <td><p>Barking</p></td>
+                                <td><p>Accidents</p></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select name="PrefEducation" class="multiselect">
+                                        <option></option>
+                                        <option value="20">None</option>
+                                        <option value="21">Student</option>
+                                        <option value="22">Obedience School</option>
+                                        <option value="23">Advanced Skills</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="PrefBarking" class="multiselect">
+                                        <option></option>
+                                        <option value="24">Never</option>
+                                        <option value="25">Occasionally</option>
+                                        <option value="26">Daily</option>
+                                        <option value="27">Trying to Quit</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="PrefAccidents" class="multiselect">
+                                        <option></option>
+                                        <option value="28">Never</option>
+                                        <option value="29">Rarely</option>
+                                        <option value="30">When Ill</option>
+                                        <option value="31">Frequently</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                        <button>Submit</button>
+                    </form>
+            </div>
         </div>
     </div>
 </div>
@@ -285,20 +266,21 @@
     }
 
     function myFunction() {
-    document.getElementById("myDropdown").classList.toggle("show");
-}
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
 
 // Close the dropdown menu if the user clicks outside of it
-window.onclick = function(event) {
-  if (!event.target.matches('.dropbtn')) {
-
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    var i;
-    for (i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
     }
   }
 }

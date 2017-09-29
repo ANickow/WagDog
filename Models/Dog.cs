@@ -24,11 +24,20 @@ namespace WagDog.Models
         
         [NotMapped]
         public double MatchPercent { get; set; }
+
+        [NotMapped]
+        public double ReverseMatchPercent { get; set; }
         
         public List<DogInterest> Interests { get; set; }
         public List<Family> Humans { get; set; }
         public List<Cohab> Animals { get; set; }
         public List<Preference> Preferences { get; set; }
+        
+        [InverseProperty("DogBlocking")]
+        public List<Block> BlockedDogs { get; set; }
+
+        [InverseProperty("BlockedDog")]
+        public List<Block> BlockingMe { get; set; }
 
         public Dog()
         {
@@ -36,6 +45,8 @@ namespace WagDog.Models
             Humans = new List<Family>();
             Animals = new List<Cohab>();
             Preferences = new List<Preference>();
+            BlockedDogs = new List<Block>();
+            BlockingMe = new List<Block>();
         }
     }
 }

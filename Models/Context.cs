@@ -17,5 +17,6 @@ namespace WagDog.Models
         public DbSet<Message> Messages { get; set; }
         public DbSet<Preference> Preferences { get; set; }
         public DbSet<Filter> Filters { get; set; }
+        public DbSet<Block> Blocks { get; set; }
     	}
 }

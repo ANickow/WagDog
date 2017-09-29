@@ -48,8 +48,11 @@ namespace WagDog.Controllers
         public IActionResult Search()
         {
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");
-            Dog CurrentDog = _context.Dogs.Include(d => d.Preferences).ThenInclude(p => p.Filter).SingleOrDefault(dog => dog.DogId == dogId);
-            IEnumerable<Dog> Dogs = _context.Dogs.Where(d => d.DogId != dogId).ToList();
+            if (dogId == null){
+                return RedirectToAction("index");
+            }
+            Dog CurrentDog = _context.Dogs.Include(d => d.Preferences).ThenInclude(p => p.Filter).Include(d => d.BlockedDogs).Include(d => d.BlockingMe).SingleOrDefault(dog => dog.DogId == dogId);
+            IEnumerable<Dog> Dogs = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).Where(d => d.DogId != dogId).ToList();
             List<Filter> SearchFilters = HttpContext.Session.GetObjectFromJson<List<Filter>>("SearchFilters");
             if(SearchFilters != null){
                 foreach (var filter in SearchFilters){
@@ -96,14 +99,19 @@ namespace WagDog.Controllers
             foreach (var dog in Dogs){
                     dog.MatchPercent = CalculateMatch(dog, CurrentDog);
                 }
+            Dogs = RemoveBlockages(Dogs, CurrentDog);
             SearchWrapper SearchResults = new SearchWrapper(Dogs, SearchFilters);
-          return View(SearchResults);  
+            ViewBag.currDogId = dogId;
+            return View(SearchResults);  
         } 
 
         [HttpPost]
         [Route("ProcessSearch")]
         public IActionResult ProcessSearch(int PrefAge, int PrefBreed, int PrefBodyType, int PrefEducation, int PrefAccidents, int PrefBarking){
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");
+            if (dogId == null){
+                return RedirectToAction("index");
+            }
             Dog CurrentDog = _context.Dogs.Include(d=> d.Preferences).ThenInclude(p => p.Filter).SingleOrDefault(dog => dog.DogId == dogId);
             List<Filter> AllSearchFilters = new List<Filter>();
             if (PrefAge > 0)
@@ -153,10 +161,43 @@ namespace WagDog.Controllers
         }
 
         [HttpGet]
+        [Route("Match/{MatchMethod}")]
+        public IActionResult Match(string MatchMethod)
+        {
+            int? dogId = HttpContext.Session.GetInt32("CurrentDog");
+            if (dogId == null){
+                return RedirectToAction("index");
+            }
+            Dog CurrentDog = _context.Dogs.Include(d => d.Preferences).ThenInclude(p => p.Filter).SingleOrDefault(dog => dog.DogId == dogId);
+            IEnumerable<Dog> Dogs = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).Where(d => d.DogId != dogId).ToList();
+            foreach (var dog in Dogs){
+                dog.MatchPercent = CalculateMatch(dog, CurrentDog);
+                dog.ReverseMatchPercent = CalculateMatch(CurrentDog, dog);
+            }
+            List<Filter> SearchFilters = new List<Filter>();
+            if (MatchMethod == "Match"){
+                Dogs = Dogs.Where(d => d.MatchPercent >= 0.66666);
+            } else if (MatchMethod == "Reverse"){
+                Dogs = Dogs.Where(d => d.ReverseMatchPercent >= 0.66666);
+            } else if (MatchMethod == "Mutual"){
+                Dogs = Dogs.Where(d => d.ReverseMatchPercent >= 0.66666 && d.MatchPercent >= 0.66666);
+            }
+            Dogs = Dogs.OrderByDescending(d => d.MatchPercent);
+            Dogs = RemoveBlockages(Dogs, CurrentDog);
+            SearchWrapper SearchResults = new SearchWrapper(Dogs, SearchFilters);
+            ViewBag.currDogId = dogId;
+            return View("Search", SearchResults);  
+        } 
+
+
+        [HttpGet]
         [Route("UserProfile")]
         public IActionResult Profile()
         {
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");
+            if (dogId == null){
+                return RedirectToAction("index");
+            }
             Dog CurrentDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == dogId);
             return View(CurrentDog);
         }
@@ -213,6 +254,7 @@ namespace WagDog.Controllers
         public JsonResult UpdateProfile(DogProfileViewModel DogModel)
         {
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");
+            
             Dog CurrentDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == dogId);
             CurrentDog.Age = DogModel.Age;
             CurrentDog.BodyType = DogModel.BodyType;
@@ -307,6 +349,7 @@ namespace WagDog.Controllers
             List<Message> Sent = _context.Messages.Include(m=>m.Receiver).OrderByDescending(t => t.created_at).Where(message => message.SenderId == dogId).ToList();
             ViewBag.Messages=Messages;
             ViewBag.Sent=Sent;
+            ViewBag.currDogId = dogId;
             return View("Messages");
         }
 
@@ -314,6 +357,9 @@ namespace WagDog.Controllers
         [Route("Dashboard")]
         public IActionResult Dashboard(){
             int? dogId = HttpContext.Session.GetInt32("CurrentDog");
+            if (dogId == null){
+                return RedirectToAction("index");;
+            }
             // Dog CurrentDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == dogId);
             // return View(CurrentDog);
             return RedirectToAction("Profile", new { DogId = (int)dogId});
@@ -323,8 +369,12 @@ namespace WagDog.Controllers
         [Route("Profile/{DogId}")]
         public IActionResult Profile(int DogId){
             int? currDogId = HttpContext.Session.GetInt32("CurrentDog");
+            if (currDogId == null){
+                return RedirectToAction("index");;
+            }
             ViewBag.currDogId = (int)currDogId;
             Dog ProfileDog = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).SingleOrDefault(dog => dog.DogId == DogId);
+            ViewBag.currDogId = currDogId;
             return View(ProfileDog);
         }
 
@@ -336,7 +386,7 @@ namespace WagDog.Controllers
             Dog CurrentDog = _context.Dogs.SingleOrDefault(dog => dog.DogId == dogId);
             var path = Path.Combine(
                         Directory.GetCurrentDirectory(), "wwwroot/profiles");
-            var fileName = CurrentDog.Name + Path.GetExtension(Photo.FileName);
+            var fileName = CurrentDog.DogId + Path.GetExtension(Photo.FileName);
             CurrentDog.PhotoPath = "/profiles/" + fileName;
             using (var fileStream = new FileStream(Path.Combine(path, fileName), FileMode.Create)){
                 Console.WriteLine("ready to save");
@@ -452,7 +502,7 @@ namespace WagDog.Controllers
 
             int? loggedInId = HttpContext.Session.GetInt32("CurrentDog");
             if (loggedInId == null){
-                // WHERE DO YOU WANT TO GO IF NOT LOGGED IN????**********************
+                return RedirectToAction("index");
             }
 
             if (ModelState.IsValid)
@@ -476,8 +526,146 @@ namespace WagDog.Controllers
     
         }
 
+        [HttpGet]
+        [Route("Block/{DogId}")]
+        public IActionResult Block(int DogId){
+            int? loggedInId = HttpContext.Session.GetInt32("CurrentDog");
+            Block newBlocking = new Block();
+            newBlocking.DogBlockingId = (int)loggedInId;
+            newBlocking.BlockedDogId = DogId;
+            _context.Blocks.Add(newBlocking);
+            _context.SaveChanges();
+            return RedirectToAction("Search");
+        }
+
+        public IEnumerable<Dog> RemoveBlockages (IEnumerable<Dog> Dogs, Dog CurrentDog){
+            List<Dog> DogsToRemove = new List<Dog>();
+            foreach (var blockage in CurrentDog.BlockedDogs){
+                Dog toRemove = Dogs.SingleOrDefault(d => d.DogId == blockage.BlockedDogId);
+                DogsToRemove.Add(toRemove);
+            }
+            foreach (var blockage in CurrentDog.BlockingMe){
+                Dog toRemove = Dogs.SingleOrDefault(d => d.DogId == blockage.DogBlockingId);
+                DogsToRemove.Add(toRemove);
+            }
+            Dogs = Dogs.Except(DogsToRemove);
+            return Dogs;
+        }
+
         public double CalculateMatch(Dog dMatch, Dog dLoggedIn){
-            return dMatch.DogId + dLoggedIn.DogId;
+            // Calculate Total Possible Points
+            double possiblePoints = 1.0;
+            double matchPoints = 0.0;
+            if (dLoggedIn.Age > 0){
+                possiblePoints +=1.0;
+                if (Math.Abs(dMatch.Age - dLoggedIn.Age)<2){
+                    matchPoints += 1.0;
+                }
+            }
+            if (dLoggedIn.Breed != null){
+                possiblePoints +=1.0;
+                if (dMatch.Breed == dLoggedIn.Breed){
+                    matchPoints += 1.0;
+                }
+            }
+            if (dLoggedIn.BodyType != null){
+                possiblePoints +=1.0;
+                if (dMatch.BodyType == dLoggedIn.BodyType){
+                    matchPoints += 1.0;
+                }
+            }
+            if (dLoggedIn.HighestEducation != null){
+                possiblePoints +=1;
+                if (dMatch.HighestEducation == dLoggedIn.HighestEducation){
+                    matchPoints += 1;
+                }
+            }
+            if (dLoggedIn.Barking != null){
+                possiblePoints +=1.0;
+                if (dMatch.Barking == dLoggedIn.Barking){
+                    matchPoints += 1.0;
+                }
+            }
+            if (dLoggedIn.Accidents != null){
+                possiblePoints +=1.0;
+                if (dMatch.Accidents == dLoggedIn.Accidents){
+                    matchPoints += 1.0;
+                }
+            }
+            if (dLoggedIn.Interests != null){
+                possiblePoints += 1.0;
+                foreach (var DLIinterest in dLoggedIn.Interests){
+                    if (dMatch.Interests.Where(i => i.InterestId == DLIinterest.InterestId).ToList().Count != 0){
+                        matchPoints += 1.0;
+                    }
+                }
+            }
+            if (dLoggedIn.Humans != null){
+                possiblePoints += 1.0;
+                foreach (var DLIhuman in dLoggedIn.Humans){
+                    if (dMatch.Humans.Where(h => h.HumanId == DLIhuman.HumanId).ToList().Count != 0){
+                        matchPoints += 1.0;
+                    }
+                }
+            }
+            if (dLoggedIn.Animals != null){
+                possiblePoints += 1.0;
+                foreach (var DLIanimal in dLoggedIn.Animals){
+                    if (dMatch.Animals.Where(a => a.AnimalId == DLIanimal.AnimalId).ToList().Count != 0){
+                        matchPoints += 1.0;
+                    }
+                }
+            }
+            if (dLoggedIn.Preferences != null){
+                possiblePoints += dLoggedIn.Preferences.Count();
+                foreach (var preference in dLoggedIn.Preferences){
+                    Filter filter = preference.Filter;
+                    if (filter.Category == "Age"){
+                        if (filter.LinqFilter == "Puppy"){
+                            if(dMatch.Age <= 3){
+                                matchPoints += 1.0;
+                            }
+                        }
+                        if (filter.LinqFilter == "Adult"){
+                            if(dMatch.Age > 3 && dMatch.Age <10){
+                                matchPoints += 1.0;
+                            }
+                        }
+                        if (filter.LinqFilter == "Senior"){
+                            if(dMatch.Age >= 10){
+                                matchPoints += 1.0;
+                            }
+                        }
+                    } else if (filter.Category == "Breed"){
+                            if(dMatch.Breed == filter.UserFilter){
+                                matchPoints += 1.0;
+                            }
+                    } else if (filter.Category == "BodyType"){
+                            if(dMatch.BodyType == filter.UserFilter){
+                                matchPoints += 1.0;
+                            }
+                    } else if (filter.Category == "HighestEducation"){
+                            if(dMatch.HighestEducation == filter.UserFilter){
+                                matchPoints += 1.0;
+                            }
+                    } else if (filter.Category == "Barking"){
+                            if(dMatch.Barking == filter.UserFilter){
+                                matchPoints += 1.0;
+                            }
+                    } else if (filter.Category == "Accidents"){
+                            if(dMatch.Accidents == filter.UserFilter){
+                                matchPoints += 1.0;
+                            }
+                    }
+                }   
+            }
+            double matchRatio = matchPoints/(possiblePoints/3.0);
+            if(matchRatio > 1.0){
+                matchRatio = 0.99;
+            } else if (matchRatio < 0.009){
+                matchRatio = 0.01;
+            }
+            return matchRatio;
         }
     }
 }
