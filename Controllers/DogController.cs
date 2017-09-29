@@ -51,7 +51,7 @@ namespace WagDog.Controllers
             if (dogId == null){
                 return RedirectToAction("index");
             }
-            Dog CurrentDog = _context.Dogs.Include(d => d.Preferences).ThenInclude(p => p.Filter).SingleOrDefault(dog => dog.DogId == dogId);
+            Dog CurrentDog = _context.Dogs.Include(d => d.Preferences).ThenInclude(p => p.Filter).Include(d => d.BlockedDogs).Include(d => d.BlockingMe).SingleOrDefault(dog => dog.DogId == dogId);
             IEnumerable<Dog> Dogs = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).Where(d => d.DogId != dogId).ToList();
             List<Filter> SearchFilters = HttpContext.Session.GetObjectFromJson<List<Filter>>("SearchFilters");
             if(SearchFilters != null){
@@ -99,6 +99,7 @@ namespace WagDog.Controllers
             foreach (var dog in Dogs){
                     dog.MatchPercent = CalculateMatch(dog, CurrentDog);
                 }
+            Dogs = RemoveBlockages(Dogs, CurrentDog);
             SearchWrapper SearchResults = new SearchWrapper(Dogs, SearchFilters);
             ViewBag.currDogId = dogId;
             return View(SearchResults);  
@@ -522,6 +523,32 @@ namespace WagDog.Controllers
             }
             return RedirectToAction("Messages");
     
+        }
+
+        [HttpGet]
+        [Route("Block/{DogId}")]
+        public IActionResult Block(int DogId){
+            int? loggedInId = HttpContext.Session.GetInt32("CurrentDog");
+            Block newBlocking = new Block();
+            newBlocking.DogBlockingId = (int)loggedInId;
+            newBlocking.BlockedDogId = DogId;
+            _context.Blocks.Add(newBlocking);
+            _context.SaveChanges();
+            return RedirectToAction("Search");
+        }
+
+        public IEnumerable<Dog> RemoveBlockages (IEnumerable<Dog> Dogs, Dog CurrentDog){
+            List<Dog> DogsToRemove = new List<Dog>();
+            foreach (var blockage in CurrentDog.BlockedDogs){
+                Dog toRemove = Dogs.SingleOrDefault(d => d.DogId == blockage.BlockedDogId);
+                DogsToRemove.Add(toRemove);
+            }
+            foreach (var blockage in CurrentDog.BlockingMe){
+                Dog toRemove = Dogs.SingleOrDefault(d => d.DogId == blockage.DogBlockingId);
+                DogsToRemove.Add(toRemove);
+            }
+            Dogs = Dogs.Except(DogsToRemove);
+            return Dogs;
         }
 
         public double CalculateMatch(Dog dMatch, Dog dLoggedIn){

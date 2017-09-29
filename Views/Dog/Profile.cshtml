@@ -4,7 +4,7 @@
 @{
     DogProfileViewModel EditProfile = new DogProfileViewModel();
     bool Editable = false;
-    
+    if(@Model.DogId == @ViewBag.currDogId){
         EditProfile.DogId = @Model.DogId;
         EditProfile.Email = @Model.Email;
         EditProfile.Breed = @Model.Breed;
@@ -24,7 +24,7 @@
             EditProfile.Animals.Add(@animal.AnimalId);
         }
         Editable = true;
-    
+    }
 }
 <html>
 
@@ -67,6 +67,7 @@
                             <li class="icons"><a href="mailto:@Model.Email"><img class="icon" style="height:45px;" src="/img/email.png"></a></li>
                             <li class="icons"><a href="#newMessage"><img class="icon" style="height:37px;" src="/img/msg.png"></a></li>
                             <li class="icons"><a href="#newWink"><img class="icon" style="height:40px;" src="/img/wink.png"></a></li>
+                            <li class="icons"><a asp-controller="Dog" asp-action="Block" asp-route-DogId=@Model.DogId><img class="icon" style="height:40px;" src="/img/block.png"></a></li>
                         </ul>
                     }   
                 </div>
