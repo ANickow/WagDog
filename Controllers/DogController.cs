@@ -160,6 +160,33 @@ namespace WagDog.Controllers
         }
 
         [HttpGet]
+        [Route("Match/{MatchMethod}")]
+        public IActionResult Match(string MatchMethod)
+        {
+            int? dogId = HttpContext.Session.GetInt32("CurrentDog");
+            if (dogId == null){
+                return RedirectToAction("index");
+            }
+            Dog CurrentDog = _context.Dogs.Include(d => d.Preferences).ThenInclude(p => p.Filter).SingleOrDefault(dog => dog.DogId == dogId);
+            IEnumerable<Dog> Dogs = _context.Dogs.Include(d => d.Interests).ThenInclude(di => di.Interest).Include(d => d.Humans).ThenInclude(f => f.Human).Include(d => d.Animals).ThenInclude(c => c.Animal).Where(d => d.DogId != dogId).ToList();
+            foreach (var dog in Dogs){
+                dog.MatchPercent = CalculateMatch(dog, CurrentDog);
+                dog.ReverseMatchPercent = CalculateMatch(CurrentDog, dog);
+            }
+            List<Filter> SearchFilters = new List<Filter>();
+            if (MatchMethod == "Reverse"){
+                Dogs = Dogs.Where(d => d.ReverseMatchPercent >= 0.66666);
+            } else if (MatchMethod == "Mutual"){
+                Dogs = Dogs.Where(d => d.ReverseMatchPercent >= 0.66666 && d.MatchPercent >= 0.66666);
+            }
+            Dogs = Dogs.OrderByDescending(d => d.MatchPercent);
+            SearchWrapper SearchResults = new SearchWrapper(Dogs, SearchFilters);
+            ViewBag.currDogId = dogId;
+            return View("Search", SearchResults);  
+        } 
+
+
+        [HttpGet]
         [Route("UserProfile")]
         public IActionResult Profile()
         {
@@ -355,7 +382,7 @@ namespace WagDog.Controllers
             Dog CurrentDog = _context.Dogs.SingleOrDefault(dog => dog.DogId == dogId);
             var path = Path.Combine(
                         Directory.GetCurrentDirectory(), "wwwroot/profiles");
-            var fileName = CurrentDog.Name + Path.GetExtension(Photo.FileName);
+            var fileName = CurrentDog.DogId + Path.GetExtension(Photo.FileName);
             CurrentDog.PhotoPath = "/profiles/" + fileName;
             using (var fileStream = new FileStream(Path.Combine(path, fileName), FileMode.Create)){
                 Console.WriteLine("ready to save");
@@ -603,6 +630,11 @@ namespace WagDog.Controllers
                 }   
             }
             double matchRatio = matchPoints/(possiblePoints/3.0);
+            if(matchRatio > 1.0){
+                matchRatio = 0.99;
+            } else if (matchRatio < 0.009){
+                matchRatio = 0.01;
+            }
             return matchRatio;
         }
     }

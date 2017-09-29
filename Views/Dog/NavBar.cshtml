@@ -2,7 +2,7 @@
     <ul>
         <li><a asp-controller="Dog" asp-action="Profile" asp-route-DogId=@ViewBag.currDogId>Home</a></li>
         <li><a asp-controller="Dog" asp-action="Search">Search</a></li>
-        <li><a href="#news">Matches</a></li>
+        <li><a asp-controller="Dog" asp-action="Match" asp-route-MatchMethod="Match">Matches</a></li>
     </ul>
 
     <ul style="float:right;">

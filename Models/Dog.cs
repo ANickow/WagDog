@@ -24,6 +24,9 @@ namespace WagDog.Models
         
         [NotMapped]
         public double MatchPercent { get; set; }
+
+        [NotMapped]
+        public double ReverseMatchPercent { get; set; }
         
         public List<DogInterest> Interests { get; set; }
         public List<Family> Humans { get; set; }
