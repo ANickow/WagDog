@@ -22,39 +22,117 @@
 
         <br>
         <div style="margin-bottom:50px;" class="profileContent">
-            <div>
-                <button onClick="openPref()">Set your search</button>
-                <div class="dropdown" style="display: inline-block;float:right;margin-top:10px;">
-                    <button onclick="myFunction()" class="tablinks">Sort By</button>
-                    <div id="myDropdown" class="dropdown-content">
-                        <a href="#" onclick="sort(Youngest)">Youngest</a>
-                        <a href="#">Oldest</a>
-                        <a href="#">Recent Member</a>
-                        <a href="#">Oldest Member</a>
-                    </div>
+        <button onClick="openPref()">Set your search</button>
+        <div class="dropdown" style="display: inline-block;float:right;">
+                <button onclick="myFunction()" class="tablinks" id="sortButton">Sort By</button>
+                <div id="myDropdown" class="dropdown-content">
+                    <a onclick="sortYoungest()">Youngest</a>
+                    <a onclick="sortOldest()">Oldest</a>
+                    <a onclick="sortNewestMember()">Recent Member</a>
+                    <a onclick="sortOldestMember()">Oldest Member</a>
                 </div>
+        </div>
+        <br>
+        <div id="searchResult">
+        @foreach(var dog in @Model.Dogs){
+            <div class="searchTile">
+            <a href="Profile/@dog.DogId">
+                <div style="height:175px;width:175px;background-color:whitesmoke;margin:auto;">
+                    @if(@dog.PhotoPath != null){
+                        <img class="searchTile" src=@dog.PhotoPath>
+                    }else{
+                        <img class="searchTile" src="/img/defaultDog.jpg">
+                    }
+                </div>
+                <div style="text-align: center;margin-top:10px;">
+                @dog.Name @dog.Age<br>
+                @dog.Breed @((dog.MatchPercent*100).ToString("##")) %
+                </div>
+            </a>
             </div>
+        }
         </div>
-      
-        <div class="profileContent">  
-            @foreach(var dog in @Model.Dogs){
-                <div class="searchTile">
-                <a href="Profile/@dog.DogId">
-                    <div style="height:175px;width:175px;background-color:whitesmoke;margin:auto;">
-                        @if(@dog.PhotoPath != null){
-                            <img class="searchTile" src=@dog.PhotoPath>
-                        }else{
-                            <img class="searchTile" src="/img/defaultDog.jpg">
-                        }
-                    </div>
-                    <div style="text-align: center;margin-top:10px;">
-                    @dog.Name @dog.Age<br>
-                    @dog.Breed @((dog.MatchPercent*100).ToString("##")) %
-                    </div>
-                </a>
+        
+        <div id="searchResultYoungest" class="hidden">
+        @foreach(var dog in @Model.Dogs.OrderBy(t => t.Age)){
+            <div class="searchTile">
+            <a href="Profile/@dog.DogId">
+                <div style="height:175px;width:175px;background-color:whitesmoke;margin:auto;">
+                    @if(@dog.PhotoPath != null){
+                        <img class="searchTile" src=@dog.PhotoPath>
+                    }else{
+                        <img class="searchTile" src="/img/defaultDog.jpg">
+                    }
                 </div>
-            }
+                <div style="text-align: center;margin-top:10px;">
+                @dog.Name @dog.Age<br>
+                @dog.Breed @((dog.MatchPercent*100).ToString("##")) %
+                </div>
+            </a>
+            </div>
+        }
         </div>
+
+        <div id="searchResultOldest" class="hidden">
+        @foreach(var dog in @Model.Dogs.OrderByDescending(t => t.Age)){
+            <div class="searchTile">
+            <a href="Profile/@dog.DogId">
+                <div style="height:175px;width:175px;background-color:whitesmoke;margin:auto;">
+                    @if(@dog.PhotoPath != null){
+                        <img class="searchTile" src=@dog.PhotoPath>
+                    }else{
+                        <img class="searchTile" src="/img/defaultDog.jpg">
+                    }
+                </div>
+                <div style="text-align: center;margin-top:10px;">
+                @dog.Name @dog.Age<br>
+                @dog.Breed @((dog.MatchPercent*100).ToString("##")) %
+                </div>
+            </a>
+            </div>
+        }
+        </div>
+
+        <div id="searchResultNewestMember" class="hidden">
+        @foreach(var dog in @Model.Dogs.OrderByDescending(t => t.created_at)){
+            <div class="searchTile">
+            <a href="Profile/@dog.DogId">
+                <div style="height:175px;width:175px;background-color:whitesmoke;margin:auto;">
+                    @if(@dog.PhotoPath != null){
+                        <img class="searchTile" src=@dog.PhotoPath>
+                    }else{
+                        <img class="searchTile" src="/img/defaultDog.jpg">
+                    }
+                </div>
+                <div style="text-align: center;margin-top:10px;">
+                @dog.Name @dog.Age<br>
+                @dog.Breed @((dog.MatchPercent*100).ToString("##")) %
+                </div>
+            </a>
+            </div>
+        }
+        </div>
+
+        <div id="searchResultOldestMember" class="hidden">
+        @foreach(var dog in @Model.Dogs.OrderBy(t => t.created_at)){
+            <div class="searchTile">
+            <a href="Profile/@dog.DogId">
+                <div style="height:175px;width:175px;background-color:whitesmoke;margin:auto;">
+                    @if(@dog.PhotoPath != null){
+                        <img class="searchTile" src=@dog.PhotoPath>
+                    }else{
+                        <img class="searchTile" src="/img/defaultDog.jpg">
+                    }
+                </div>
+                <div style="text-align: center;margin-top:10px;">
+                @dog.Name @dog.Age<br>
+                @dog.Breed @((dog.MatchPercent*100).ToString("##")) %
+                </div>
+            </a>
+            </div>
+        }
+        </div>
+        
 
         
     <div id="PrefModal" class="modal">
@@ -147,11 +225,44 @@
             </div>
         </div>
     </div>
+</div>
+</div>
 
 
 <script>
-    function sort(){
-        $.post("/sort")
+    function sortYoungest(){
+        $("#sortButton").html("Youngest")
+        $("#searchResult").addClass("hidden")
+        $("#searchResultYoungest").removeClass("hidden")
+        $("#searchResultOldest").addClass("hidden")
+        $("#searchResultNewestMember").addClass("hidden")
+        $("#searchResultOldestMember").addClass("hidden")
+    }
+
+    function sortOldest(){
+        $("#sortButton").html("Oldest")
+        $("#searchResult").addClass("hidden")
+        $("#searchResultYoungest").addClass("hidden")
+        $("#searchResultOldest").removeClass("hidden")
+        $("#searchResultNewestMember").addClass("hidden")
+        $("#searchResultOldestMember").addClass("hidden")
+    }
+
+    function sortNewestMember(){
+        $("#sortButton").html("Newest Member")
+        $("#searchResult").addClass("hidden")
+        $("#searchResultYoungest").addClass("hidden")
+        $("#searchResultOldest").addClass("hidden")
+        $("#searchResultNewestMember").removeClass("hidden")
+        $("#searchResultOldestMember").addClass("hidden")
+    }
+    function sortOldestMember(){
+        $("#sortButton").html("Oldest Member")
+        $("#searchResult").addClass("hidden")
+        $("#searchResultYoungest").addClass("hidden")
+        $("#searchResultOldest").addClass("hidden")
+        $("#searchResultNewestMember").addClass("hidden")
+        $("#searchResultOldestMember").removeClass("hidden")
     }
 
     function myFunction() {
@@ -171,6 +282,8 @@
             }
         }
     }
+  }
+}
 
     var closePref = document.getElementById("closePref");
     var pref = document.getElementById("PrefModal");
@@ -184,5 +297,6 @@
         closePref.onclick = function(){
                 pref.style.display = "none";
         }
+
     });
 </script>

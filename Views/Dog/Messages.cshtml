@@ -32,17 +32,18 @@
         <h3>Inbox</h3>
         
         @foreach(var message in @ViewBag.Messages){
-            <a href="#newMessage">
+            <hr>
+            
             <div>
-            <p> From: @message.Sender.Name </p>
+            <a asp-controller="Dog" asp-action="Profile" asp-route-DogId=@message.Sender.DogId><p> From: @message.Sender.Name </p></a>
+            <a href="#newMessage">
             <p style="color:black">
                 @message.MessageContent
             </p>
+            </a>
             </div>
             <p style="color:#BDBDBD;font-size:11px;">@message.created_at</p>
 
-
-            </a>
             <a class="lightbox" id="newMessage">
                 <div class="messageBox" style="vertical-align: top;">
                 <p style="display:inline-block;">Send To:@message.Sender.Name</p>
@@ -58,17 +59,17 @@
 
                 </div>
             </a>
-            <hr>
+            
         }
         </div>
 
         <div id="Paris" class="tabcontent">
         <h3>Sent</h3>
         @foreach(var message in @ViewBag.Sent){
-            <p> To: @message.Receiver.Name </p>
+            <hr>
+            <p> <a href="Profile/@message.Receiver.DogId">To: @message.Receiver.Name</a></p>
             @message.MessageContent
             <p style="color:#BDBDBD;font-size:11px;">@message.created_at</p>
-            <hr>
         }
         </div>
 

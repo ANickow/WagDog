@@ -540,6 +540,9 @@ div.tab button.active {
     border: 1px solid #ccc;
     border-top: none;
 }
+.hidden{
+    display:none;
+}
 
 /* Light box test */
 
